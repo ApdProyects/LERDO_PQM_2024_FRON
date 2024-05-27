@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lerdo_MX_PQM.Paginas.Login"
+             BackgroundColor="White"
+             Title="Login">
+    <Grid>
+        <Grid Grid.Row="0" Grid.Column="0" x:Name="grdLoading" BackgroundColor="{StaticResource White}" IsVisible="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4.2*"/>
+                <RowDefinition Height="1.6*"/>
+                <RowDefinition Height="4.2*"/>
+            </Grid.RowDefinitions>
+
+            <StackLayout Grid.Row="1" Grid.Column="1" BackgroundColor="{StaticResource VerdeOscuro}">
+                <ActivityIndicator 
+                    Color="White"
+                    IsRunning="True"
+                    Margin="0,14,0,0"/>
+
+                <Label 
+                            TextColor="{StaticResource White}"
+                            Text="Cargando...."
+                            FontSize="20"
+                            HorizontalTextAlignment="Center"
+                            Margin="0,13,0,0"/>
+            </StackLayout>
+
+        </Grid>
+
+        <Grid Margin="20,10,20,10" x:Name="grdLogin" RowDefinitions=".1*,.3*,.1*,.1*,.1*,.1*,.1*,.1*">
+
+            <Grid Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center">
+                <Border Margin="0,5,0,0"
+                     BackgroundColor="{StaticResource VerdeClaro}"
+                     HeightRequest="50"
+                     HorizontalOptions="Start"
+                     VerticalOptions="Start" >
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
+                    </Border.StrokeShape>
+
+                    <Button 
+                       x:Name="btnSincInf"
+                       FontSize="15"
+                       Text="----- Sincronizar Infracciones "
+                       TextColor="{StaticResource White}"
+                       Background="{StaticResource VerdeClaro}"
+                       VerticalOptions="Center"></Button>
+                </Border>
+                <Border Margin="-10,5,0,0"
+                        BackgroundColor="{StaticResource VerdeOscuro}"
+                        HeightRequest="50"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Start"
+                        WidthRequest="50">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
+                    </Border.StrokeShape>
+                    <Button 
+                        x:Name="btnNumSincInf"
+                        FontSize="15"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Text="(0)"
+                        TextColor="{StaticResource White}"
+                        BackgroundColor="{StaticResource VerdeOscuro}"
+                        ></Button>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="1"  HorizontalOptions="Center" VerticalOptions="Center">
+                <Border>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10,10,10,10"/>
+                    </Border.StrokeShape>
+                    <Image Aspect="AspectFill" Source="icon_img.png" />
+                </Border>
+            </Grid>
+            <Label 
+                Grid.Row="2"
+                HorizontalOptions="Center"
+                FontSize="20"
+                FontFamily="OpenSansSemibold"
+                FontAttributes="Bold"            
+                Text="PARQUIMETROS"
+                TextColor="{StaticResource Black}"
+                VerticalOptions="Center"></Label>
+
+            <StackLayout Grid.Row="3" Grid.RowSpan="2" Orientation="Vertical" VerticalOptions="Center" Margin="10,10,10,10"  >
+                <Label Text="Usuario/Inspector:" TextColor="{StaticResource VerdeClaro}" ></Label>
+                <Editor Margin="0,0,0,10"  
+                        x:Name="txtUsuario" 
+                        Placeholder="Usuario o Inspector" 
+                        FontSize="15" 
+                        TextColor="Black"
+                        TextTransform="Uppercase"
+                        PlaceholderColor="Gray"
+                        BackgroundColor="{StaticResource Gray100}"/>
+
+                <Label Text="Contraseña:" TextColor="{StaticResource VerdeClaro}" ></Label>
+                <Entry Margin="0,0,0,10" 
+                       x:Name="txtContraseña" 
+                       Placeholder="Contraseña" 
+                       FontSize="15"
+                       IsPassword="True"
+                       TextColor="Black"
+                       PlaceholderColor="Gray"
+                       BackgroundColor="{StaticResource Gray100}"/>
+
+            </StackLayout>
+
+            <Grid Grid.Row="5" HorizontalOptions="Center" VerticalOptions="Center">
+                <StackLayout>
+                    
+                
+                <Border 
+                    Margin="0,5,0,0"
+                    BackgroundColor="{StaticResource VerdeOscuro}"
+                    HeightRequest="50"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start" >
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
+                    </Border.StrokeShape>
+
+                    <Button 
+                        FontSize="15"
+                        x:Name="btnLogin"
+                        Text="INICIAR SESIÓN"
+                        WidthRequest="250"
+                        TextColor="{StaticResource White}"
+                        Background="{StaticResource VerdeClaro}"
+                        VerticalOptions="Center"></Button>
+                </Border>
+                <Button
+                    Clicked="btnsinc_catalogos_clik"
+                    BackgroundColor="{StaticResource VerdeClaro}" 
+                    BorderColor="{StaticResource VerdeOscuro}" 
+                    BorderWidth="2" 
+                    FontSize="Body"
+                    Text="Sincronizar Catalogos"
+                    ></Button>
+                </StackLayout>
+            </Grid>
+
+            <Grid Grid.Row="7" HorizontalOptions="Center" VerticalOptions="Center">
+                <Border Margin="0,5,0,0" 
+                     BackgroundColor="{StaticResource VerdeClaro}"
+                     HeightRequest="50"
+                     HorizontalOptions="Start"
+                     VerticalOptions="Start" >
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
+                    </Border.StrokeShape>
+
+                    <Button 
+                       FontSize="15"
+                       x:Name="btnPruebaImpresion"
+                       Text="----- Prueba de impresion "
+                       TextColor="{StaticResource White}"
+                       Background="{StaticResource VerdeClaro}"
+                       VerticalOptions="Center"></Button>
+                </Border>
+                <Border Margin="-10,5,0,0"
+                     BackgroundColor="{StaticResource VerdeOscuro}"
+                     HeightRequest="50"
+                     HorizontalOptions="Start"
+                     VerticalOptions="Start"
+                     WidthRequest="50">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
+                    </Border.StrokeShape>
+                    <Button 
+                        FontFamily="iconos_font"
+                        FontSize="25"
+                        x:Name="btnPruebaImpresionIcono"
+                        HorizontalOptions="Center"
+                        Text="&#xE8C0;"
+                        TextColor="{StaticResource White}"
+                        BackgroundColor="{StaticResource VerdeOscuro}"
+                        VerticalOptions="Center"></Button>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

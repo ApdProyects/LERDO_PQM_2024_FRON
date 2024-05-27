@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lerdo_MX_PQM.Paginas.Infraciones_Page"
+             Title="INFRACCIÓNES"
+             BackgroundColor="White">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="30,10,30,10">
+        <!-- parte superior-->
+        <StackLayout Grid.Row="0" Orientation="Vertical">
+            <!-- folio -->
+            <Label Margin="10,0,0,0" FontSize="12" Text="Folio:" TextColor="{StaticResource VerdeClaro}"/>
+            <Editor x:Name="txtFolio" 
+                Placeholder="folio:"
+                Text="03"
+                TextColor="Black"
+                IsEnabled="False"
+                FontSize="15" 
+                PlaceholderColor="{StaticResource VerdeClaro}"/>
+            <!-- Inspector -->
+            <Label Margin="10,0,0,0" FontSize="12" Text="Inspector:" TextColor="{StaticResource VerdeClaro}"/>
+            <Editor x:Name="txtInspector" 
+                Text="NombreUsuario"
+                TextColor="Black"
+                IsEnabled="False"
+                FontSize="15" 
+                PlaceholderColor="{StaticResource VerdeClaro}"/>
+        </StackLayout>
+        <!-- carga de datos-->
+        <ScrollView
+            Grid.Row="1"
+            Orientation="Vertical" 
+            VerticalScrollBarVisibility="Default">
+            <StackLayout Orientation="Vertical">
+                <!-- Marca Vehiculo-->
+                <Label Margin="10,0,0,0" FontSize="12" Text="Marca Vehiculo:" TextColor="{StaticResource VerdeClaro}"/>
+                <Picker x:Name="CBMARCA" Title="Selecciona una Marca." TitleColor="LightSlateGray" TextColor="Black" SelectedIndexChanged="CBMARCA_SelectedIndexChanged"></Picker>
+
+                <!-- Linea Vehiculo-->
+                <Label Margin="10,0,0,0" FontSize="12" Text="Línea Vehiculo:" TextColor="{StaticResource VerdeClaro}"/>
+                <Picker x:Name="CBLINEA" Title="Seleccioné una Línea." TitleColor="LightSlateGray"></Picker>
+
+                <!-- Color Vehiculo-->
+                <Label Margin="10,0,0,0" FontSize="12" Text="Color Vehiculo:" TextColor="{StaticResource VerdeClaro}"/>
+                <Picker x:Name="CBCOLOR" Title="Seleccioné un Color." TitleColor="LightSlateGray"> </Picker>
+
+                <!-- Procedencia: -->
+                <Label Margin="10,0,0,0" FontSize="12" Text="Procedencia:" TextColor="{StaticResource VerdeClaro}"/>
+                <Picker x:Name="CBPROCEDENCIA" Title="Seleccioné una Procedencia." TitleColor="LightSlateGray"></Picker>
+
+                <!-- Lugar: -->
+                <Label Margin="10,0,0,0" FontSize="12" Text="Lugar:" TextColor="{StaticResource VerdeClaro}"/>
+                <Picker x:Name="CBLUGAR" Title="Seleccioné un Lugar." TitleColor="LightSlateGray"></Picker>
+
+                <!-- Garantia: -->
+                <Label Margin="10,0,0,0" FontSize="12" Text="Garantía:" TextColor="{StaticResource VerdeClaro}"/>
+                <Picker x:Name="CBGARANTIA" Title="Seleccioné una Garantía" TitleColor="LightSlateGray" ></Picker>
+
+                <!-- No Placa -->
+                <Label Margin="10,0,0,0" FontSize="12" Text="No Placa:" TextColor="{StaticResource VerdeClaro}"/>
+                <Editor x:Name="txtNoPlaca" 
+                    Text=""
+                    TextColor="Black"
+                    IsEnabled="True"
+                    FontSize="15" 
+                    PlaceholderColor="{StaticResource VerdeClaro}"/>
+ 
+                <!-- Estado Placas:: -->
+                <Label Margin="10,0,0,0" FontSize="12" Text="Estado Placas:" TextColor="{StaticResource VerdeClaro}"/>
+                <Picker x:Name="CBEDOPLACA" Title="Seleccioné ..." TitleColor="LightSlateGray"></Picker>
+
+                <!-- Motivo: -->
+                <Label Margin="10,0,0,0" FontSize="12" Text="Motivó:" TextColor="{StaticResource VerdeClaro}"/>
+                <Picker x:Name="CBMOTIVO" Title="Seleccioné un Motivó." TitleColor="LightSlateGray"></Picker>
+
+            </StackLayout>
+        </ScrollView>
+
+        <StackLayout Grid.Row="2" Orientation="Vertical">
+            <Grid RowDefinitions="25,40,20"
+                HorizontalOptions="Fill" >
+                <Border 
+                    Grid.Row="0"
+                    HorizontalOptions="Fill" 
+                    BackgroundColor="#2ecc71">
+                    <Grid ColumnDefinitions=".7*,.3*">
+                        <Label Grid.Column="0" HorizontalOptions="Center" VerticalTextAlignment="Center" FontSize="Subtitle"  Text="Descripción" TextColor="{StaticResource Black}" ></Label>
+                        <Label Grid.Column="1" HorizontalOptions="Center" VerticalTextAlignment="Center" FontSize="Subtitle"  Text="Importe" TextColor="{StaticResource Black}"></Label>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="1" VerticalOptions="Start" HeightRequest="3" ></Border>
+                <Grid Grid.Row="1" ColumnDefinitions=".7*,.3*" >
+                    <Label Grid.Column="0" 
+                       HorizontalOptions="Center" 
+                       VerticalTextAlignment="Center" 
+                       FontSize="12" 
+                       Text="Art. 31 REGLAMENTO DE ESTACIONÓMETROS EN LA VÍA PÚBLICA" 
+                       TextColor="{StaticResource VerdeOscuro}"></Label>
+                    <Label Grid.Column="1" x:Name="lbl1Monto" HorizontalOptions="Center" VerticalTextAlignment="Center"  Text="$0" TextColor="{StaticResource VerdeOscuro}"></Label>
+                </Grid>
+                <Border Grid.Row="2" VerticalOptions="Start" HeightRequest="3"></Border>
+                <Grid Grid.Row="2" ColumnDefinitions=".7*,.3*">
+                    <Label Grid.Column="0" HorizontalOptions="Center" VerticalTextAlignment="Center" Text="IMPORTE TOTAL" TextColor="{StaticResource VerdeOscuro}" ></Label>
+                    <Label Grid.Column="1" x:Name="lbl2Monto" HorizontalOptions="Center" VerticalTextAlignment="Center" Text="$0" TextColor="{StaticResource VerdeOscuro}"></Label>
+                </Grid>
+            </Grid>
+            <Button
+                Margin="20"
+                x:Name="btnSincInf"
+                FontSize="15"
+                Text="Guardar Infraccion"
+                TextColor="{StaticResource White}"
+                Background="{StaticResource VerdeClaro}"
+                VerticalOptions="Center"></Button>
+
+        </StackLayout>
+    </Grid>
+    
+</ContentPage>

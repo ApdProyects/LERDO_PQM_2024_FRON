@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:local="clr-namespace:Lerdo_MX_PQM.Paginas"
+             x:Class="Lerdo_MX_PQM.Paginas.FlayOutPage"
+            Title="FlayOutPage">
+    <FlyoutPage.Flyout>
+        <local:Menu_Page x:Name="flayoutPage"/>
+    </FlyoutPage.Flyout>
+    <FlyoutPage.Detail>
+        <NavigationPage>
+            <x:Arguments>
+                <local:Infraciones_Page></local:Infraciones_Page>
+            </x:Arguments>
+        </NavigationPage>
+    </FlyoutPage.Detail>
+</FlyoutPage>
