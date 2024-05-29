@@ -1,6 +1,6 @@
 ﻿public class MontoInfraccion
 {
-    public double IMPORTEMULTA { get; set; }
+    public double Monto { get; set; }
 }
 public class clsProcedencia
 {

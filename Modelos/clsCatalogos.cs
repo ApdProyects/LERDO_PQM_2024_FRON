@@ -16,7 +16,7 @@ namespace Lerdo_MX_PQM.Modelos
         public List<clsEstados>     ListaEstados    { get; set; }
         public List<clsLugares>     ListaLugares    { get; set; }
         public List<UltimasInfracciones> listaInfracciones { get; set; }
-        public List<clsMotivos> ListMotivos { get; set; }
+        public List<clsMotivos>     ListMotivos { get; set; }
         public List<clsProcedencia> ListProcedencias { get; set; }
         public List<MontoInfraccion> listaMonto { get; set; }
 
@@ -181,30 +181,17 @@ namespace Lerdo_MX_PQM.Modelos
         }
         public async Task catImporteMulta()
         {
-            try
+            clsServices service = new clsServices();
+            clsRespuesta respuesta = await service.GetListas("Inspectores/RecuperaIMPORTEMULTA");
+            if (respuesta.codigo == 1)
             {
-                clsServices service = new clsServices();
-                clsRespuesta respuesta = await service.GetListas("Inspectores/RecuperaIMPORTEMULTA");
-                if (respuesta.codigo == 1)
+                List<MontoInfraccion> resJson = JsonConvert.DeserializeObject<List<MontoInfraccion>>(respuesta.ListaResultado.ToString());
+                this.listaMonto = resJson.Select(i => new MontoInfraccion
                 {
-                    MontoInfraccion motno = new MontoInfraccion();
-                    motno.IMPORTEMULTA = double.Parse(respuesta.Mensaje);
-                    this.listaMonto.Add(motno);
-                }
-                else
-                {
-                    MontoInfraccion motno = new MontoInfraccion();
-                    motno.IMPORTEMULTA = 125.94;
-                    this.listaMonto.Add(motno);
-                }
+                    Monto = i.Monto
+                }).ToList();
             }
-            catch (Exception)
-            {
-                MontoInfraccion motno = new MontoInfraccion();
-                motno.IMPORTEMULTA = 125.94;
-                this.listaMonto.Add(motno);
-            }
-            
+
         }
         /*Funcion de Global sincronizacion*/
         public async Task<string> CargarCatalogos() 

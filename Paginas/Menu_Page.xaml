@@ -28,49 +28,45 @@
                     </CollectionView.ItemsSource>
                     <CollectionView.ItemTemplate >
                         <DataTemplate>
-                            <Grid Padding="5,10">
-                                <Grid.ColumnDefinitions>
+                            <Grid Padding="5,10" BackgroundColor="{StaticResource AzulAPD}">
+                                <Grid.ColumnDefinitions >
                                     <ColumnDefinition Width="30"/>
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
+                                
                                 <!--<Image Source="{Binding IconSource}" />-->
                                 <Label Grid.Column="1"
                                        Margin="20,0"
                                        Text="{Binding Title}"
-                                       TextColor="{StaticResource VerdeClaro}"
+                                       TextColor="{StaticResource White}"
                                        FontSize="20"
                                        FontAttributes="Bold"
-                                       VerticalOptions="Center" />
+                                       VerticalOptions="Center" 
+                                       BackgroundColor="{StaticResource AzulAPD}"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Grid BackgroundColor="{StaticResource White}">
-                    <Button  x:Name="btnSinc" Clicked="btnSincronizar_click"
+                <Grid Padding="5,1" BackgroundColor="{StaticResource White}">
+                    <Button x:Name="btnSinc" Clicked="btnSincronizar_click"
                         FontSize="Caption"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center"
                         Text="SINCORNIZAR INFRACCIÓNES"
-                        TextColor="{StaticResource VerdeClaro}"
-                        BackgroundColor="White"></Button>
+                        TextColor="{StaticResource White}"
+                        BackgroundColor="{StaticResource AzulAPD}"></Button>
                 </Grid>
-                <Grid Padding="5,10" BackgroundColor="{StaticResource White}">
+                <Grid Padding="5,1" BackgroundColor="{StaticResource White}">
                     <Button  x:Name="btnSincCat" Clicked="btnSincronizarCatalogos_click"
                         FontSize="Caption"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center"
                         Text="SINCORNIZAR Catalogos"
-                        TextColor="{StaticResource VerdeClaro}"
-                        BackgroundColor="White"></Button>
+                        TextColor="{StaticResource White}"
+                        BackgroundColor="{StaticResource AzulAPD}"></Button>
                 </Grid>
-                <Grid Padding="5,10" BackgroundColor="{StaticResource White}">
+                <Grid Padding="5,1" BackgroundColor="{StaticResource White}">
                     <Button  x:Name="btnSALIR" Clicked="btnSalir_cliked"
                      FontSize="Caption"
-                     HorizontalOptions="Center"
-                     VerticalOptions="Center"
                      Text="SALIR"
-                     TextColor="{StaticResource VerdeClaro}"
-                     BackgroundColor="White"></Button>
+                     TextColor="{StaticResource White}"
+                     BackgroundColor="{StaticResource AzulAPD}"></Button>
                 </Grid>
             </StackLayout>
         </Grid>

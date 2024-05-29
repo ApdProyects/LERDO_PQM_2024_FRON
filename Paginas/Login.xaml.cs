@@ -1,5 +1,4 @@
-using System.Data.Common;
-using System.Runtime.InteropServices;
+
 using Lerdo_MX_PQM.Helpers;
 using Lerdo_MX_PQM.Modelos;
 
@@ -101,46 +100,46 @@ public partial class Login : ContentPage
                 App.DataBase.DropTable<clsProcedencia>();
                 App.DataBase.DropTable<MontoInfraccion>();
                 /*  Creamos la tabla      */
-                App.DataBase.CreateTables<clsInspector>();
-                App.DataBase.CreateTables<clsMarcas>();
-                App.DataBase.CreateTables<clsLineas>();
-                App.DataBase.CreateTables<clsColores>();
-                App.DataBase.CreateTables<clsGarantias>();
-                App.DataBase.CreateTables<clsEstados>();
-                App.DataBase.CreateTables<clsLugares>();
-                App.DataBase.CreateTables<UltimasInfracciones>();
-                App.DataBase.CreateTables<clsMotivos>();
-                App.DataBase.CreateTables<clsProcedencia>();
-                App.DataBase.CreateTables<MontoInfraccion>();
+                await App.DataBase.CreateTables<clsInspector>();
+                await App.DataBase.CreateTables<clsMarcas>();
+                await App.DataBase.CreateTables<clsLineas>();
+                await App.DataBase.CreateTables<clsColores>();
+                await App.DataBase.CreateTables<clsGarantias>();
+                await App.DataBase.CreateTables<clsEstados>();
+                await App.DataBase.CreateTables<clsLugares>();
+                await App.DataBase.CreateTables<UltimasInfracciones>();
+                await App.DataBase.CreateTables<clsMotivos>();
+                await App.DataBase.CreateTables<clsProcedencia>();
+                await App.DataBase.CreateTables<MontoInfraccion>();
 
 
                 /*  Insertamos la tabla   */
-                App.DataBase.InsertRangeItem<clsInspector>          (catalogos.ListInspectores);
-                App.DataBase.InsertRangeItem<clsMarcas>             (catalogos.ListaMarcas);
-                App.DataBase.InsertRangeItem<clsLineas>             (catalogos.ListaLineas);
-                App.DataBase.InsertRangeItem<clsColores>            (catalogos.ListaColores);
-                App.DataBase.InsertRangeItem<clsGarantias>          (catalogos.ListaGarantias);
-                App.DataBase.InsertRangeItem<clsEstados>            (catalogos.ListaEstados);
-                App.DataBase.InsertRangeItem<clsLugares>            (catalogos.ListaLugares);
-                App.DataBase.InsertRangeItem<UltimasInfracciones>   (catalogos.listaInfracciones);
-                App.DataBase.InsertRangeItem<clsMotivos>            (catalogos.ListMotivos);
-                App.DataBase.InsertRangeItem<clsProcedencia>        (catalogos.ListProcedencias);
-                App.DataBase.InsertRangeItem<MontoInfraccion>       (catalogos.listaMonto);
+                await App.DataBase.InsertRangeItem<clsInspector>          (catalogos.ListInspectores);
+                await App.DataBase.InsertRangeItem<clsMarcas>             (catalogos.ListaMarcas);
+                await App.DataBase.InsertRangeItem<clsLineas>             (catalogos.ListaLineas);
+                await App.DataBase.InsertRangeItem<clsColores>            (catalogos.ListaColores);
+                await App.DataBase.InsertRangeItem<clsGarantias>          (catalogos.ListaGarantias);
+                await App.DataBase.InsertRangeItem<clsEstados>            (catalogos.ListaEstados);
+                await App.DataBase.InsertRangeItem<clsLugares>            (catalogos.ListaLugares);
+                await App.DataBase.InsertRangeItem<UltimasInfracciones>   (catalogos.listaInfracciones);
+                await App.DataBase.InsertRangeItem<clsMotivos>            (catalogos.ListMotivos);
+                await App.DataBase.InsertRangeItem<clsProcedencia>        (catalogos.ListProcedencias);
+                await App.DataBase.InsertRangeItem<MontoInfraccion>       (catalogos.listaMonto);
 
 
                 ShowMessage.HideLoading();
-                await ShowMessage.Alert("Catalogos Actualizados.");
+                ShowMessage.Alert("Catalogos Actualizados.");
             }
             else
             {
                 ShowMessage.HideLoading();
-                await ShowMessage.Alert("No se pudo consultar los catalogos");
+                ShowMessage.Alert("No se pudo consultar los catalogos");
             }
         } 
         catch (Exception ex)
         {
             ShowMessage.HideLoading();
-            await ShowMessage.Alert(ex.Message);
+            ShowMessage.Alert(ex.Message);
         }
     }
 
@@ -172,31 +171,31 @@ public partial class Login : ContentPage
                        pass = txtContraseña.Text.Trim();
                 //InspectorLogin Users = App.Usuario;
                 List<clsInspector> ListaInspectores = await App.DataBase.GetItemsTable<clsInspector>();
-                clsInspector inspector = ListaInspectores.FirstOrDefault(i => i.PIN_USUARIO_PRT == user);
-                if (inspector.PIN_PASSWORD_PRT == pass)
+                List<clsInspector> inspector = ListaInspectores.Where(i => i.PIN_USUARIO_PRT.ToString() == user && i.PIN_PASSWORD_PRT.ToString() == txtContraseña.Text.Trim()).ToList();
+                if (inspector.Count > 0)
                 {
                     InspectorLogin User = new InspectorLogin();
-                    List<InspectorLogin> UserList = new List<InspectorLogin>(); 
+                    List<InspectorLogin> UserList = new List<InspectorLogin>();
                     User.User_act = true;
-                    User.PIN_CLAVE = inspector.PIN_CLAVE;
-                    User.PIN_NOMBRE = inspector.PIN_NOMBRE;
+                    User.PIN_CLAVE = inspector.First().PIN_CLAVE;
+                    User.PIN_NOMBRE = inspector.First().PIN_NOMBRE;
                     UserList.Add(User);
 
                     App.DataBase.DropTable<InspectorLogin>();
-                    App.DataBase.CreateTables<InspectorLogin>();
-                    App.DataBase.InsertRangeItem<InspectorLogin>(UserList);
-                    
+                    await App.DataBase.CreateTables<InspectorLogin>();
+                    await App.DataBase.InsertRangeItem<InspectorLogin>(UserList);
+
                     ShowMessage.Alert("Bienvenido " + User.PIN_NOMBRE.Trim());
                     App.Current.MainPage = new FlayOutPage();
                 }
                 else
                 {
-                    ShowMessage.Alert("Contraseña no valida");
+                ShowMessage.Alert("Contraseña no valida");
                 }
             }
             else
             {
-                ShowMessage.Alert("Ingreso Usuario y Contraseña");
+            ShowMessage.Alert("Ingreso Usuario y Contraseña");
             }
         }
         catch (Exception ex)
@@ -208,6 +207,7 @@ public partial class Login : ContentPage
     {
         try 
         {
+
         }
         catch (Exception ex)
         {

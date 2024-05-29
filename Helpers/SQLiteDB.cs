@@ -29,8 +29,7 @@ namespace Lerdo_MX_PQM.SQLite
             CreateTables<clsLugares>();
             CreateTables<clsMotivos>();
             CreateTables<clsProcedencia>();
-            CreateTables<MontoInfraccion>();
-
+            CreateTables<MontoInfraccion>(); 
             //CreateTables<clsIinfraccion>();
         }
 

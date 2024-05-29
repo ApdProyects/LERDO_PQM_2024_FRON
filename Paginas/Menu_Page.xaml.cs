@@ -7,6 +7,7 @@ public partial class Menu_Page : ContentPage
 	public Menu_Page()
 	{
 		InitializeComponent();
+        CargarUltimosFolios();
 	}
     /*lo mantenemos simple y solo borramos la tabla Login*/
     private async void btnSalir_cliked(object? sender, EventArgs e)
@@ -52,4 +53,18 @@ public partial class Menu_Page : ContentPage
         }
     }
 
+    private async void CargarUltimosFolios()
+    {
+        List<UltimasInfracciones> ultimasInfracciones = await App.DataBase.GetItemsTable<UltimasInfracciones>();
+        lvlFolio1.Text = "FOLIO 1: " + ultimasInfracciones[0].PIF_FOLIO;
+        lvlPlaca1.Text = "PLACA 1: " + ultimasInfracciones[0].PIF_PLACAS;
+        lvlFolio2.Text = "FOLIO 2: " + ultimasInfracciones[1].PIF_FOLIO;
+        lvlPlaca2.Text = "PLACA 2: " + ultimasInfracciones[1].PIF_PLACAS;
+        lvlFolio3.Text = "FOLIO 3: " + ultimasInfracciones[2].PIF_FOLIO;
+        lvlPlaca3.Text = "PLACA 3: " + ultimasInfracciones[2].PIF_PLACAS;
+        lvlFolio4.Text = "FOLIO 4: " + ultimasInfracciones[3].PIF_FOLIO;
+        lvlPlaca4.Text = "PLACA 4: " + ultimasInfracciones[3].PIF_PLACAS;
+        lvlFolio5.Text = "FOLIO 5: " + ultimasInfracciones[4].PIF_FOLIO;
+        lvlPlaca5.Text = "PLACA 5: " + ultimasInfracciones[4].PIF_PLACAS;
+    }
 }

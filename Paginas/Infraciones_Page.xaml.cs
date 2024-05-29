@@ -6,7 +6,7 @@ namespace Lerdo_MX_PQM.Paginas;
 public partial class Infraciones_Page : ContentPage
 {
 	public Infraciones_Page()
-	{
+	{   
 		InitializeComponent();
 		CargarData();
     }
@@ -46,8 +46,8 @@ public partial class Infraciones_Page : ContentPage
 			CBEDOPLACA.ItemsSource = ListaEstados.Select(x => x.PPE_NOMBRE).ToList();
 			CBMOTIVO.ItemsSource = ListaMotivos.Select(x => x.PMO_DESCRIPCION).ToList();
 			CBPROCEDENCIA.ItemsSource = ListaProcedencia.Select(x => x.PRO_DESCRIPCION).ToList();
-			lbl1Monto.Text = Montos.FirstOrDefault(x => x.IMPORTEMULTA > 0).IMPORTEMULTA.ToString();
-            lbl2Monto.Text = Montos.FirstOrDefault(x => x.IMPORTEMULTA > 0).IMPORTEMULTA.ToString();
+			lbl1Monto.Text = Montos.FirstOrDefault(x => x.Monto > 0).Monto.ToString();
+            lbl2Monto.Text = Montos.FirstOrDefault(x => x.Monto > 0).Monto.ToString();
         }
         catch (Exception EX)
 		{
@@ -72,6 +72,5 @@ public partial class Infraciones_Page : ContentPage
             ShowMessage.Alert("ERROR :" + EX.Message);
         }
     }
-
 
 }
