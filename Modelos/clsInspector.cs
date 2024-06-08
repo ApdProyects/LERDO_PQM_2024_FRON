@@ -7,7 +7,6 @@
     public string?  PIN_USUARIO_PRT     {get; set;}
     public string?  PIN_PASSWORD_PRT    { get; set; }
     public int      PIN_FOLIO           { get; set; }
-    public int      PIN_FOLIO_SQLLITE   { get; set; }
     public bool?    User_act            { get; set; }
 }
 
@@ -45,5 +44,6 @@ public class InspectorLogin
 {
     public int PIN_CLAVE { get; set; }
     public string? PIN_NOMBRE { get; set; }
+    public int PIN_FOLIO { get; set; }
     public bool? User_act { get; set; }
 }

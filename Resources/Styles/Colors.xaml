@@ -54,8 +54,17 @@
     <Color x:Key="BGGray"       >#1f2225</Color>
     <Color x:Key="verdetraslucido">#E7F5EB</Color>
     <!-- Colores APD-->
-    <Color x:Key="AzulAPD">#435d9a</Color>
-    <Color x:Key="RosaAPD">#e32b83</Color>
-    <Color x:Key="lemaAPD">#3d255f</Color>
-    
+    <Color x:Key="AzulAPD">#0d62d9</Color>
+    <Color x:Key="RosaAPD">#ed078b</Color>
+    <Color x:Key="lemaAPD">#30236d</Color>
+    <Color x:Key="APDConLema1">#e7e6f2</Color>
+    <Color x:Key="APDConLema2">#84b4f7</Color>
+    <Color x:Key="APDConLema3">#6780b9</Color>
+    <Color x:Key="APDConLema4">#3662a5</Color>
+    <Color x:Key="APDConLema5">#343c8c</Color>
+
+
+
+
+
 </ResourceDictionary>

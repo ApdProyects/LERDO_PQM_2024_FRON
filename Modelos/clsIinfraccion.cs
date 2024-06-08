@@ -76,6 +76,26 @@ public partial class clsIinfraccion
     }
 }
 
+public class Infracciones
+{
+    public string PIF_FOLIO { get; set; }
+    public DateTime Fecha_hora_Infraccion { get; set; }
+    public int PIN_CLAVE { get; set; }
+    public int PPR_CLAVE { get; set; }
+    public int PVM_CLAVE { get; set; }
+    public int PVL_CLAVE { get; set; }
+    public int PVC_CLAVE { get; set; }
+    public string PIF_PLACAS { get; set; }
+    public int PPE_CLAVE { get; set; }
+    public int PLI_CLAVE { get; set; }
+    public string PIF_PROCEDENCIA { get; set; }
+    public int PGR_CLAVE { get; set; }
+    public string PIF_IMPORTE { get; set; }
+    public string PIF_OBSERVACIONES { get; set; }
+    public string PIF_MOTIVO_DESCRIPCION { get; set; }
+    public bool Det_Sync { get; set; }
+}
+
 public class UltimasInfracciones
 {
     public string?      PIF_FOLIO                { get; set; }

@@ -22,5 +22,33 @@ namespace Lerdo_MX_PQM.Helpers
         {
             await loadingPage.RemovePageAsync(App.PopupPage);
         }
+
+        public async static Task ShowCheckInternet()
+        {
+            await loadingPage.PushAsync(App.CheckInternet);
+        }
+        public async static Task HideCheckInternet()
+        {
+            await loadingPage.RemovePageAsync(App.CheckInternet);
+        }
+
+        public async static Task ShowCheckServer()
+        {
+            await loadingPage.PushAsync(App.CheckServer);
+        }
+        public async static Task HideCheckServer()
+        {
+            await loadingPage.RemovePageAsync(App.CheckServer);
+        }
+
+        public async static Task ShowSendData()
+        {
+            await loadingPage.PushAsync(App.SendData);
+        }
+        public async static Task HideSendData()
+        {
+            await loadingPage.RemovePageAsync(App.SendData);
+        }
+
     }
 }

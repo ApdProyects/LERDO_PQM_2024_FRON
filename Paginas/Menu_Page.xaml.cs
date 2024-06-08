@@ -24,11 +24,58 @@ public partial class Menu_Page : ContentPage
         }
     }
     private async void btnSincronizar_click(object? sender, EventArgs e)
-    {   
-        ShowMessage.ShowLoading();
-        await Task.Delay(10000);
-        ShowMessage.HideLoading();
-        ShowMessage.Alert("Sincronizacion Finalizada");
+    {
+        List<Infracciones> listaInfraccion = new List<Infracciones>();
+        clsCatalogos catalogos = new clsCatalogos();
+        bool checkinternet = false;
+        bool checkServer = false;
+        bool sinc = false;
+        try
+        {
+            List<Infracciones> listaInfraccionMostrar = new List<Infracciones>();
+            listaInfraccion = await App.DataBase.GetItemsTable<Infracciones>();
+            if (listaInfraccion.Where(x => x.Det_Sync == false).Count() > 0)
+            {
+                ShowMessage.ShowCheckInternet();
+                checkinternet = await catalogos.ChackInternet();
+                ShowMessage.HideCheckInternet();
+                if (checkinternet)
+                {
+                    ShowMessage.ShowCheckServer();
+                    checkServer = await catalogos.ChackServer();
+                    ShowMessage.HideCheckServer();
+
+                    if (checkServer)
+                    {
+                        ShowMessage.ShowSendData();
+                        sinc = await catalogos.SincronizaFolios();
+                        ShowMessage.HideSendData();
+                        if (!sinc)
+                        {ShowMessage.Alert("Error al sincronizar, Intentelo mas tarde");}
+                        try
+                        {
+                            listaInfraccionMostrar = await App.DataBase.GetItemsTable<Infracciones>();
+                            List<InspectorLogin> UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
+                            btnSinc.Text = "SINCORNIZAR INFRACCIÓNES (" + listaInfraccionMostrar.Where(x => x.Det_Sync == false).Count().ToString() + ")";
+
+                        }
+                        catch (Exception)
+                        {
+                            btnSinc.Text = "SINCORNIZAR INFRACCIÓNES (" + listaInfraccion.Where(x => x.Det_Sync == false).Count().ToString() + ")";
+                        }
+                    }
+                    else {ShowMessage.Alert("Sin Acceso al Servidor");}
+                }
+                else { ShowMessage.Alert("App Sin Acceso a Internet"); }
+            }
+            else { ShowMessage.Alert("No Existen Infracciones Pendiente "); }
+
+        }
+        catch (Exception ex)
+        {
+            ShowMessage.Alert(ex.Message);
+        }
+
     }
     private async void btnSincronizarCatalogos_click(object? sender, EventArgs e)
     {
@@ -66,5 +113,21 @@ public partial class Menu_Page : ContentPage
         lvlPlaca4.Text = "PLACA 4: " + ultimasInfracciones[3].PIF_PLACAS;
         lvlFolio5.Text = "FOLIO 5: " + ultimasInfracciones[4].PIF_FOLIO;
         lvlPlaca5.Text = "PLACA 5: " + ultimasInfracciones[4].PIF_PLACAS;
+
+        /*btnSinc*/
+        List<Infracciones> listaInfraccion = new List<Infracciones>();
+        try
+        {
+            ////ShowMessage.ShowLoadingUser();
+            //await Task.Delay(1000);
+            listaInfraccion = await App.DataBase.GetItemsTable<Infracciones>();
+            List<InspectorLogin> UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
+            btnSinc.Text = "SINCORNIZAR INFRACCIONES (" + listaInfraccion.Where(x => x.Det_Sync == false).Count().ToString() + ")";
+
+        }
+        catch (Exception)
+        {
+            btnSinc.Text = "SINCORNIZAR INFRACCIONES (" + listaInfraccion.Where(x => x.Det_Sync == false).Count().ToString() + ")";
+        }
     }
 }

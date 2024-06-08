@@ -1,7 +1,7 @@
 ﻿public class clsLugares
 {
-    public int? PLI_CLAVE { get; set; }
-    public string? PLI_NOMBRE { get; set;}
+    public int PLI_CLAVE { get; set; }
+    public string PLI_NOMBRE { get; set;}
 }
 public class Lugares_Consulta
 {

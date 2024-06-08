@@ -1,4 +1,6 @@
-﻿public class MontoInfraccion
+﻿using static AndroidX.ConstraintLayout.Core.Motion.Utils.HyperSpline;
+
+public class MontoInfraccion
 {
     public double Monto { get; set; }
 }
@@ -16,6 +18,22 @@ public class clsMotivos
     public bool? PMO_ACTIVADO { get; set; }
 }
 
+public class BluetoothPrinter
+{
+    public string PIM_MACADDRESS { get; set; }
+}
+
+public class ClsImpresoras
+{
+    public int PIM_CLAVE { get; set;}
+    public string PIM_NOMBRE_IMPRESORA { get; set;}
+    public string PIM_MACADDRESS { get; set; }
+}
+
+public class ClsEstructuratiket
+{
+    public string tiket { get; set; }
+}
 
 
 

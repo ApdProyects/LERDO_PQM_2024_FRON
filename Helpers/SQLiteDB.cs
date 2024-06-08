@@ -28,9 +28,11 @@ namespace Lerdo_MX_PQM.SQLite
             CreateTables<clsEstados>();
             CreateTables<clsLugares>();
             CreateTables<clsMotivos>();
+            /*nuevos metodos no existentes*/
             CreateTables<clsProcedencia>();
-            CreateTables<MontoInfraccion>(); 
-            //CreateTables<clsIinfraccion>();
+            CreateTables<MontoInfraccion>();
+            CreateTables<ClsImpresoras>();
+            CreateTables<ClsEstructuratiket>();
         }
 
         public async Task CreateTables<TTable>() where TTable : class, new()
@@ -57,6 +59,12 @@ namespace Lerdo_MX_PQM.SQLite
         {
             var table = Database.Table<Table>();
             return await table.ToListAsync();
+        }
+        
+        // Método para actualizar una sola fila
+        public async Task<int> UpdateItemAsync<T>(T item) where T : class, new()
+        {
+            return await Database.UpdateAsync(item);
         }
     }
 }
