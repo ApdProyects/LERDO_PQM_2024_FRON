@@ -20,7 +20,8 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>Lerdo_MX_PQM</ApplicationTitle>
+		<!--<ApplicationTitle>Lerdo_MX_PQM</ApplicationTitle>-->
+		<ApplicationTitle>Lerdo PQM</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.lerdo_mx_pqm</ApplicationId>
@@ -49,11 +50,13 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF" />
+		<!--<MauiIcon Include="Resources\AppIcon\icon.png" BaseSize="128,128"/>-->
+		<!--<MauiIcon Include="Resources\AppIcon\icon.png" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF" />-->
 		<!--<MauiIcon Include="Resources\Splash\icon_app.png" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />-->
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#ffffff" BaseSize="300,300" />
 		<!--<MauiSplashScreen Include="Resources\Splash\icon_splash.png" BaseSize="128,128" />-->
 
 		<!-- Images -->
@@ -61,12 +64,13 @@
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
-
+		
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Platforms\Android\AndroidManifest.xml" />
 	  <None Remove="Resources\Fonts\fontello.ttf" />
 	  <None Remove="Resources\Images\hanburguer.png" />
 	  <None Remove="Resources\Images\icon_img.png" />
@@ -84,11 +88,17 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Mopups" Version="1.3.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="PDFtoZPL" Version="5.0.1" />
+		<PackageReference Include="SkiaSharp" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.8" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+		<PackageReference Include="System.Drawing.Common" Version="8.0.6" />
+		<PackageReference Include="ZXing.Net.Maui" Version="0.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Paginas\Pag_Admin.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Paginas\FlayOutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -102,6 +112,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Paginas\Reimpimir_page.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Paginas\Sincronizar_Page.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
@@ -126,6 +139,12 @@
 	  <PackageReference Include="Zebra.Printer.SDK">
 	    <Version>3.0.3271</Version>
 	  </PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Paginas\Pag_Admin.xaml.cs">
+	    <DependentUpon>Pag_Admin.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

@@ -10,6 +10,9 @@ namespace Lerdo_MX_PQM
         /*inizialñizacion de variables*/
         public static SQLiteDB DataBase { get; set; }
         public static InspectorLogin Usuario { get; set; }
+        public static List<clsIinfraccion> ListaInfraciones { get; set; }
+        public static string Config { get; set; }
+
         public static Mopups.Pages.PopupPage PopupPage { get; set; }
         public static Mopups.Pages.PopupPage CheckInternet { get; set; }
         public static Mopups.Pages.PopupPage CheckServer { get; set; }
@@ -25,14 +28,14 @@ namespace Lerdo_MX_PQM
             CheckServer = VerificaServidor();
             SendData = EnviaData();
             DataBase = new SQLiteDB();
-            
+
+
             /* probarpaginas */
             MainPage = new Login();
             //MainPage = new PagLogin();
         }
 
         /*metodo pupup*/
-
         [Obsolete]
         private PopupPage GenerarLoading()
         {
@@ -248,6 +251,5 @@ namespace Lerdo_MX_PQM
             popupPage.Content = grid;
             return popupPage;
         }
-
     }
 }

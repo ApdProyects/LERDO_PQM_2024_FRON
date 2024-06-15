@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lerdo_MX_PQM.Paginas.Page_Admin"
+             Title="ConfiguracionGlobal">
+    <VerticalStackLayout Margin="10,10,10,10">
+        <Label Margin="10,10,10,10" Text="URL Actual" FontAttributes="Bold" TextColor="{StaticResource AzulAPD}" ></Label>
+        <Label Margin="10,10,10,10" x:Name="lblUrlActual" Text="URLDESTINO" TextColor="{StaticResource AzulAPD}" ></Label>
+        <Label Margin="10,10,10,10" Text="URLDESTINO" FontAttributes="Bold" TextColor="{StaticResource AzulAPD}" ></Label>
+        <Entry Margin="0,0,0,10" 
+               x:Name="txtNewURL" 
+               Placeholder="NUEVA DIRECCION" 
+               FontSize="15"
+               TextColor="Black"
+               PlaceholderColor="Gray"
+               BackgroundColor="{StaticResource Gray100}"/>
+        <Button Margin="10,10,10,10"
+            x:Name="guardar_url"
+            FontSize="15"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Clicked="guardar_url_Clicked"
+            Text="GUARDAR NUEVA URL DEL SERVIDORL"
+            TextColor="{StaticResource White}"
+            BackgroundColor="{StaticResource APDConLema4}"
+            ></Button>
+        <Button
+            VerticalOptions="End"
+            HorizontalOptions="Center"
+            Text="Salir"
+            x:Name="salir"
+            Clicked="Salir_Clicked"
+            TextColor="{StaticResource White}"
+            BackgroundColor="{StaticResource APDConLema4}"
+            ></Button>
+    </VerticalStackLayout>
+</ContentPage>

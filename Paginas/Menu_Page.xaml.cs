@@ -52,17 +52,17 @@ public partial class Menu_Page : ContentPage
                         ShowMessage.HideSendData();
                         if (!sinc)
                         {ShowMessage.Alert("Error al sincronizar, Intentelo mas tarde");}
-                        try
-                        {
-                            listaInfraccionMostrar = await App.DataBase.GetItemsTable<Infracciones>();
-                            List<InspectorLogin> UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
-                            btnSinc.Text = "SINCORNIZAR INFRACCIÓNES (" + listaInfraccionMostrar.Where(x => x.Det_Sync == false).Count().ToString() + ")";
+                        //try
+                        //{
+                        //    listaInfraccionMostrar = await App.DataBase.GetItemsTable<Infracciones>();
+                        //    List<InspectorLogin> UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
+                        //    btnSinc.Text = "SINCORNIZAR INFRACCIÓNES (" + listaInfraccionMostrar.Where(x => x.Det_Sync == false).Count().ToString() + ")";
 
-                        }
-                        catch (Exception)
-                        {
-                            btnSinc.Text = "SINCORNIZAR INFRACCIÓNES (" + listaInfraccion.Where(x => x.Det_Sync == false).Count().ToString() + ")";
-                        }
+                        //}
+                        //catch (Exception)
+                        //{
+                        //    btnSinc.Text = "SINCORNIZAR INFRACCIÓNES (" + listaInfraccion.Where(x => x.Det_Sync == false).Count().ToString() + ")";
+                        //}
                     }
                     else {ShowMessage.Alert("Sin Acceso al Servidor");}
                 }
@@ -115,19 +115,19 @@ public partial class Menu_Page : ContentPage
         lvlPlaca5.Text = "PLACA 5: " + ultimasInfracciones[4].PIF_PLACAS;
 
         /*btnSinc*/
-        List<Infracciones> listaInfraccion = new List<Infracciones>();
-        try
-        {
-            ////ShowMessage.ShowLoadingUser();
-            //await Task.Delay(1000);
-            listaInfraccion = await App.DataBase.GetItemsTable<Infracciones>();
-            List<InspectorLogin> UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
-            btnSinc.Text = "SINCORNIZAR INFRACCIONES (" + listaInfraccion.Where(x => x.Det_Sync == false).Count().ToString() + ")";
+        //List<Infracciones> listaInfraccion = new List<Infracciones>();
+        //try
+        //{
+        //    ////ShowMessage.ShowLoadingUser();
+        //    //await Task.Delay(1000);
+        //    listaInfraccion = await App.DataBase.GetItemsTable<Infracciones>();
+        //    List<InspectorLogin> UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
+        //    btnSinc.Text = "SINCORNIZAR INFRACCIONES (" + listaInfraccion.Where(x => x.Det_Sync == false).Count().ToString() + ")";
 
-        }
-        catch (Exception)
-        {
-            btnSinc.Text = "SINCORNIZAR INFRACCIONES (" + listaInfraccion.Where(x => x.Det_Sync == false).Count().ToString() + ")";
-        }
+        //}
+        //catch (Exception)
+        //{
+        //    btnSinc.Text = "SINCORNIZAR INFRACCIONES (" + listaInfraccion.Where(x => x.Det_Sync == false).Count().ToString() + ")";
+        //}
     }
 }

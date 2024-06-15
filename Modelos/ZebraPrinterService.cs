@@ -9,6 +9,11 @@ using System.Data;
 using System.Net.NetworkInformation;
 using System.Drawing.Printing;
 using Android.App;
+using Android.Net;
+using ZXing.Common;
+using ZXing.Net.Maui;
+using SkiaSharp;
+using SkiaSharp.Views.Android;
 
 public class ZebraPrinterService
 {
@@ -58,21 +63,36 @@ public class ZebraPrinterService
     }
 
 
-    public static string ConvertImageToZpl(string imagePath)
+    public string GenerateBarcodeBase64(string input)
     {
-        byte[] imageData = File.ReadAllBytes(imagePath);
-        string hexData = BitConverter.ToString(imageData).Replace("-", string.Empty);
+        try
+        {
+            // Define barcode writer
+            var writer = new BarcodeWriter
+            {
+                Format = (ZXing.BarcodeFormat)BarcodeFormat.Code128,
+                Options = new EncodingOptions
+                {
+                    Width = 300,  // Width in pixels
+                    Height = 100, // Height in pixels
+                    Margin = 10   // Margin in pixels
+                }
+            };
 
-        string zpl = $"~DGR:IMAGE.GRF,{imageData.Length},{imageData.Length / 3},{hexData}^XA^FO50,50^XGR:IMAGE.GRF,1,1^FS^XZ";
-        return zpl;
-    }
-    public async void ImpimieTiket(Infracciones infracciones, string result, string MacAddress)
-    {
+            // Generate barcode as a Maui Image
+            var barcodeBitmap = writer.Write(input);
+            // Convert Maui Image to byte array
+            using var stream = new MemoryStream();
+            barcodeBitmap.ToSKImage().Encode(SKEncodedImageFormat.Png, 100).SaveTo(stream);
+            byte[] byteImage = stream.ToArray();
 
-    }
-    public async void ReimpimeTiket(Infracciones infracciones, string result, string MacAddress)
-    {
-
+            // Convert byte array to Base64 string
+            return Convert.ToBase64String(byteImage);
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
     }
 }
 

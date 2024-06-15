@@ -33,6 +33,8 @@ namespace Lerdo_MX_PQM.SQLite
             CreateTables<MontoInfraccion>();
             CreateTables<ClsImpresoras>();
             CreateTables<ClsEstructuratiket>();
+
+            CreateTables<AppConfig>(); /*configuracion inicial*/
         }
 
         public async Task CreateTables<TTable>() where TTable : class, new()

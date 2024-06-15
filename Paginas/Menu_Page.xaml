@@ -42,6 +42,8 @@
                                               TargetType="{x:Type local:Infraciones_Page}" />
                             <local:FlyoutPageItem Title="REIMPRIMIR"
                                               TargetType="{x:Type local:Reimpimir_page}" />
+                            <local:FlyoutPageItem Title="SINCRONIZAR INFRACCIONES"
+                                                  TargetType="{x:Type local:Sincronizar_Page}" />
                         </x:Array>
                     </CollectionView.ItemsSource>
                     <CollectionView.ItemTemplate >
@@ -68,7 +70,7 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Grid Padding="5,1" BackgroundColor="{StaticResource White}">
+                <!--<Grid Padding="5,1" BackgroundColor="{StaticResource White}">
                     <Button x:Name="btnSinc" Clicked="btnSincronizar_click"
                         FontSize="15"
                         Text="SINCORNIZAR INFRACCIONES (0)"
@@ -77,12 +79,12 @@
                         HeightRequest="45"      
                         WidthRequest="300"
                         BackgroundColor="{StaticResource APDConLema4}"></Button>
-                </Grid>
+                </Grid>-->
                 <Grid Padding="5,1" BackgroundColor="{StaticResource White}">
                     <Button  x:Name="btnSincCat" 
                              Clicked="btnSincronizarCatalogos_click"
                              FontSize="15"
-                             Text="SINCORNIZAR CATALOGOS"
+                             Text="SINCRONIZAR CATALOGOS"
                              TextColor="{StaticResource White}"
                              FontAttributes="Bold"
                              HeightRequest="45"      

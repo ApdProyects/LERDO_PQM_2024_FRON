@@ -10,13 +10,22 @@ using System.Collections.Generic;
 using System.Net.Http;
 using static AndroidX.ConstraintLayout.Widget.ConstraintSet.Constraint;
 
+using System.Net.Http;
+using System.Net.Mail;
+using Zebra.Sdk.Comm;
+using Zebra.Sdk.Printer;
+using ZXing.Common;
+using System.Text;
+using static Android.Renderscripts.ScriptGroup;
+
 namespace Lerdo_MX_PQM.Paginas;
 
 public partial class Login : ContentPage
 {
+    
     private ZebraPrinterService _printerService;
     //private List<BluetoothPrinter> Impresora;
-    private BluetoothPrinter Impresora;
+    //private BluetoothPrinter Impresora;
     public bool InternetOn;
     public bool ServerOn;
 
@@ -27,9 +36,11 @@ public partial class Login : ContentPage
         grdLogin.IsVisible = false;
         GenerarEventos();
         EliminarObsoletos();
+
+
         CargarCatalogos();
         _printerService = new ZebraPrinterService(); /* inizializamos la clase de print */
-        
+
     }
     /*  */
     private async void Inspectorlog()
@@ -42,7 +53,11 @@ public partial class Login : ContentPage
             lblCarga.Text = "Verificando Usuario....";
             ////ShowMessage.ShowLoadingUser();
             //await Task.Delay(1000);
-            listaInfraccion = await App.DataBase.GetItemsTable<Infracciones>();
+            try
+            {
+                listaInfraccion = await App.DataBase.GetItemsTable<Infracciones>();
+            }
+            catch (Exception){}
             List<InspectorLogin> UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
             if (UsuarioLogin.FirstOrDefault(x => x.User_act == true).User_act == true)
             {
@@ -90,13 +105,23 @@ public partial class Login : ContentPage
         btnSincInf.Clicked += btnSinc_cliked;
         btnNumSincInf.Clicked += btnSinc_cliked;
         btnLogin.Clicked += btnLogin_cliked;
-        btnPruebaImpresion.Clicked += btnPrint_cliked;
-        btnPruebaImpresionIcono.Clicked += btnPrint_cliked;
-
+        //btnPruebaImpresion.Clicked += btnPrint_cliked;
+        //btnPruebaImpresionIcono.Clicked += btnPrint_cliked;
+        btnPruebaImpresion.Clicked += btnPrintClickNew;
+        //btnPruebaImpresionIcono.Clicked += btnPrintClickNew;
     }
     /* carmagmos los catalogos */
     private async void CargarCatalogos()
     {
+        try
+        {
+            List<AppConfig> ServidorDB = await App.DataBase.GetItemsTable<AppConfig>();
+            App.Config= ServidorDB.First().ConnectionServer.ToString();
+        }
+        catch (Exception ex)
+        {
+            App.Config = "";
+        }
         //ShowMessage.ShowLoading();
         clsCatalogos catalogos = new clsCatalogos();
         bool CheckInternet = false ,    /*verifica si tiene interent o el VPS esta on*/
@@ -234,29 +259,36 @@ public partial class Login : ContentPage
             {
                 string user = txtUsuario.Text.Trim(),
                        pass = txtContraseña.Text.Trim();
-                //InspectorLogin Users = App.Usuario;
-                List<clsInspector> ListaInspectores = await App.DataBase.GetItemsTable<clsInspector>();
-                List<clsInspector> inspector = ListaInspectores.Where(i => i.PIN_USUARIO_PRT.ToString() == user && i.PIN_PASSWORD_PRT.ToString() == txtContraseña.Text.Trim()).ToList();
-                if (inspector.Count > 0)
+                if (user == "APDCONFIG" && pass == "APDCONFIG")
                 {
-                    InspectorLogin User = new InspectorLogin();
-                    List<InspectorLogin> UserList = new List<InspectorLogin>();
-                    User.User_act = true;
-                    User.PIN_CLAVE = inspector.First().PIN_CLAVE;
-                    User.PIN_NOMBRE = inspector.First().PIN_NOMBRE;
-                    //User.PIN_FOLIO = inspector.First().PIN_FOLIO; // posible eliminacion
-                    UserList.Add(User);
-
-                    App.DataBase.DropTable<InspectorLogin>();
-                    await App.DataBase.CreateTables<InspectorLogin>();
-                    await App.DataBase.InsertRangeItem<InspectorLogin>(UserList);
-
-                    ShowMessage.Alert("Bienvenido " + User.PIN_NOMBRE.Trim());
-                    App.Current.MainPage = new FlayOutPage();
+                    App.Current.MainPage = new Page_Admin();
                 }
                 else
                 {
-                ShowMessage.Alert("Contraseña no valida");
+                    //InspectorLogin Users = App.Usuario;
+                    List<clsInspector> ListaInspectores = await App.DataBase.GetItemsTable<clsInspector>();
+                    List<clsInspector> inspector = ListaInspectores.Where(i => i.PIN_USUARIO_PRT.ToString() == user && i.PIN_PASSWORD_PRT.ToString() == txtContraseña.Text.Trim()).ToList();
+                    if (inspector.Count > 0)
+                    {
+                        InspectorLogin User = new InspectorLogin();
+                        List<InspectorLogin> UserList = new List<InspectorLogin>();
+                        User.User_act = true;
+                        User.PIN_CLAVE = inspector.First().PIN_CLAVE;
+                        User.PIN_NOMBRE = inspector.First().PIN_NOMBRE;
+                        //User.PIN_FOLIO = inspector.First().PIN_FOLIO; // posible eliminacion
+                        UserList.Add(User);
+
+                        App.DataBase.DropTable<InspectorLogin>();
+                        await App.DataBase.CreateTables<InspectorLogin>();
+                        await App.DataBase.InsertRangeItem<InspectorLogin>(UserList);
+
+                        ShowMessage.Alert("Bienvenido " + User.PIN_NOMBRE.Trim());
+                        App.Current.MainPage = new FlayOutPage();
+                    }
+                    else
+                    {
+                        ShowMessage.Alert("Contraseña no valida");
+                    }
                 }
             }
             else
@@ -269,11 +301,12 @@ public partial class Login : ContentPage
             ShowMessage.Alert("Error no controlado: " + ex.Message);
         }
     }
-    private async void btnPrint_cliked(object? sender, EventArgs e)
+    
+    private async void btnPrintClickNew(object sender, EventArgs e)
     {
+        ShowMessage.ShowLoading();
         try
         {
-            ShowMessage.ShowLoading();
             BluetoothPrinter IMPRESORA_SELECIONADA = new BluetoothPrinter();
             List<BluetoothPrinter> IMPRESORA_LIST = new List<BluetoothPrinter>();
             IMPRESORA_SELECIONADA = new BluetoothPrinter();
@@ -297,46 +330,73 @@ public partial class Login : ContentPage
                 await App.DataBase.CreateTables<BluetoothPrinter>();
                 await App.DataBase.InsertRangeItem<BluetoothPrinter>(IMPRESORA_LIST);
             }
+            var fileName = "";
+            webView.IsVisible = true;
+            string codebarras = _printerService.GenerateBarcodeBase64("APD030000000000000");
 
             List<ClsEstructuratiket> estructuratikets = await App.DataBase.GetItemsTable<ClsEstructuratiket>();
-            estructuratikets.First().tiket.ToString();
-            string zplDataTiket = estructuratikets.FirstOrDefault(x => x.tiket.ToString() != "").tiket.ToString();
-            ///*zplDataTiket = zplDataTiket.Rep*/lace("[QR_img]", ".\\Resources\\Images\\icon_img.png");
-            zplDataTiket = zplDataTiket.Replace("[Fecha]", DateTime.Now.ToString("dd/MM/yyyy"));
-            zplDataTiket = zplDataTiket.Replace("[Hora]", DateTime.Now.ToString("t"));
-            zplDataTiket = zplDataTiket.Replace("[FOLIO]", "030000000000000");
-            zplDataTiket = zplDataTiket.Replace("[PROPIETARIO]", "A QUIEN");
-            zplDataTiket = zplDataTiket.Replace("[PROPIETARIO_apellidos]", "CORRESPONDA");
-            zplDataTiket = zplDataTiket.Replace("[INSPECTOR]", "Testeo");
-            zplDataTiket = zplDataTiket.Replace("[INSPECTOR_APELLIDOS]", "");
-            zplDataTiket = zplDataTiket.Replace("[MARCA]", "TEST");
-            zplDataTiket = zplDataTiket.Replace("[LINEA]", "TEST");
-            zplDataTiket = zplDataTiket.Replace("[COLOR]", "TEST");
-            zplDataTiket = zplDataTiket.Replace("[PROCEDENCIA]", "TEST");
-            zplDataTiket = zplDataTiket.Replace("[LUGAR]", "TEST");
-            zplDataTiket = zplDataTiket.Replace("[GARANTIA]", "TEST");
-            zplDataTiket = zplDataTiket.Replace("[Num_PLACA]", "TEST");
-            zplDataTiket = zplDataTiket.Replace("[ESTADO]","TEST");
-            zplDataTiket = zplDataTiket.Replace("[MOTIVO]", "TEST");
-            zplDataTiket = zplDataTiket.Replace("[IMPORTE]", "0.00");
-            zplDataTiket = zplDataTiket.Replace("[codigoBarras]", "");
-            //await _printerService.PrintAsync(IMPRESORA_SELECIONADA.PIM_MACADDRESS, zplDataTiket);
-            bool print =  await _printerService.PrintAsync_new(IMPRESORA_SELECIONADA.PIM_MACADDRESS, zplDataTiket);
+            string html = estructuratikets.First().tiket.ToString();
+            html = html.Replace("[logo_Base64]", LogoPNG.logoBase64.ToString());
+            html = html.Replace("[Fecha]", DateTime.Now.ToString("dd/MM/yyyy"));
+            html = html.Replace("[Hora]", DateTime.Now.ToString("t"));
+            html = html.Replace("[FOLIO]", "030000000000000");
+            html = html.Replace("[PROPIETARIO]", "A QUIEN CORRESPONDA");
+            html = html.Replace("[INSPECTOR]", "Testeo");
+            html = html.Replace("[INSPECTOR_APELLIDOS]", "");
+            html = html.Replace("[MARCA]", "TEST");
+            html = html.Replace("[LINEA]", "TEST");
+            html = html.Replace("[COLOR]", "TEST");
+            html = html.Replace("[PROCEDENCIA]", "TEST");
+            html = html.Replace("[LUGAR]", "TEST");
+            html = html.Replace("[GARANTIA]", "TEST");
+            html = html.Replace("[Num_PLACA]", "TEST");
+            html = html.Replace("[ESTADO]", "TEST");
+            html = html.Replace("[MOTIVO]", "TEST");
+            html = html.Replace("[IMPORTE]", "0.00");
+            html = html.Replace("[IMPORTE_EN_LETRA]", "");
+            html = html.Replace("[CODIGOBARRAS]", codebarras);
 
-            ShowMessage.HideLoading();
-
-            if (!print)
+            try
             {
-                ShowMessage.Alert("Verifica que la impresora este encendida");
+                webView.Source = new HtmlWebViewSource { Html = html };
+                await Task.Delay(2000);
+                var stream = await webView.CaptureAsync();
+                using (var fileStream = new FileStream(Path.Combine(FileSystem.CacheDirectory, "screenshot.png"), FileMode.Create))
+                {
+                    await stream.CopyToAsync(fileStream);
+                }
+                fileName = Path.Combine(FileSystem.CacheDirectory, "screenshot.png");
+                int wid = 380; //Convert.ToInt32(380);
+                int hig = 1950;//Convert.ToInt32(1750);
+                Connection connection = new BluetoothConnection(IMPRESORA_LIST.First().PIM_MACADDRESS.ToString());
+                connection.Open();
+                ZebraPrinter zebra = ZebraPrinterFactory.GetInstance(connection);
+                int x = 0;
+                int y = 50;
+
+                zebra.PrintImage(
+                    Path.GetFullPath(fileName),
+                    x, 
+                    y, 
+                    wid, 
+                    hig, 
+                    false);
+
+                connection.Close();
             }
+            catch (Exception ex)
+            {
+                DisplayAlert("Alerta", "IMPRESORA NO CONECTADA", "OK");
+            }
+
+            webView.IsVisible = false;
         }
         catch (Exception ex)
         {
-            ShowMessage.HideLoading();
-            ShowMessage.Alert($"Error: {ex.Message}");
+            DisplayAlert("ALERTA", ex.Message, "OK");
         }
+        ShowMessage.HideLoading();
     }
-
     private async void EliminarObsoletos()
     {
         List<Infracciones> Allinfracciones = new List<Infracciones>();
@@ -374,8 +434,9 @@ public partial class Login : ContentPage
         }
         catch (Exception ex)
         {
-            ShowMessage.Alert("Error: " + ex.Message);
+            //ShowMessage.Alert("Error: " + ex.Message);
         }
     }
+
 
 }

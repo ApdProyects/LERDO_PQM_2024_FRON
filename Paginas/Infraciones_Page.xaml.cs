@@ -1,6 +1,9 @@
+using Android.Text;
 using Lerdo_MX_PQM.Helpers;
 using Lerdo_MX_PQM.Modelos;
 using System.Collections.Generic;
+using Zebra.Sdk.Comm;
+using Zebra.Sdk.Printer;
 
 namespace Lerdo_MX_PQM.Paginas;
 
@@ -31,8 +34,7 @@ public partial class Infraciones_Page : ContentPage
 			int PIN_FOLIO = inspectores.FirstOrDefault(i => i.PIN_CLAVE == PIN_CLAVE).PIN_FOLIO; // inspectores.FirstOrDefault(x => x.PIN_CLAVE == PIN_CLAVE).PIN_FOLIO;	/* ULTIMO FOLIO INSPECTOR	*/
 			txtInspector.Text = UsuarioLogin.First().PIN_NOMBRE; // UsuarioLogin.FirstOrDefault(x => x.User_act == true).PIN_NOMBRE;    /* NOMBRE DE INSPECTOR		*/
 			string folio = "030092" + PIN_CLAVE.ToString("D3") + PIN_FOLIO.ToString("D5");			/* Construccion de Folio	*/
-			txtFolio.Text = folio;		
-			
+			txtFolio.Text = folio;
 			List<clsMarcas>		ListaMarcas		= await App.DataBase.GetItemsTable<clsMarcas>();    /*marcas*/
 			List<clsLineas>		ListaLineas		= await App.DataBase.GetItemsTable<clsLineas>();    /**/
 			List<clsColores>	ListaColores	= await App.DataBase.GetItemsTable<clsColores>();	/**/
@@ -55,6 +57,23 @@ public partial class Infraciones_Page : ContentPage
 			CBPROCEDENCIA.ItemsSource = ListaProcedencia.Select(x => x.PRO_DESCRIPCION).ToList();
 			lbl1Monto.Text = "$" + Montos.FirstOrDefault(x => x.Monto > 0).Monto.ToString();
             lbl2Monto.Text = "$" + Montos.FirstOrDefault(x => x.Monto > 0).Monto.ToString();
+
+            List<ClsImpresoras> Listaimpresoras = await App.DataBase.GetItemsTable<ClsImpresoras>();
+            CBImpresoras.ItemsSource  = Listaimpresoras.Select(x => x.PIM_NOMBRE_IMPRESORA).ToList();
+			try
+			{
+				List<BluetoothPrinter> ImpresoraGuardad = await App.DataBase.GetItemsTable<BluetoothPrinter>();
+				string MacAddres = ImpresoraGuardad.First().PIM_MACADDRESS;
+				int Index = Listaimpresoras.FindIndex(x => x.PIM_MACADDRESS == MacAddres);
+				if (Index >= 0)
+				{
+					CBImpresoras.SelectedIndex = Index;
+				}
+			}
+			catch (Exception){
+				DisplayAlert("¡¡CUIDADO!!" , $"NO EXISTE UNA IMPRESORA PRECARGADA. \nACTUALIZE EL CATALOGO O SELECCIONE UNA", "OK");
+
+            }
             ShowMessage.HideLoading();
         }
         catch (Exception EX)
@@ -121,7 +140,8 @@ public partial class Infraciones_Page : ContentPage
 			CBMARCA.SelectedIndex >= 0 &&
 			CBMOTIVO.SelectedIndex >= 0 &&
 			CBPROCEDENCIA.SelectedIndex >= 0 &&
-			txtNoPlaca.Text.Trim() != ""
+			txtNoPlaca.Text.Trim() != "" &&			
+			CBImpresoras.SelectedIndex >= 0
             )
 		{
 			try
@@ -291,37 +311,94 @@ public partial class Infraciones_Page : ContentPage
 						try
 						{
 							ShowMessage.ShowLoading();
-							List<BluetoothPrinter> impresoraGuardad  = await App.DataBase.GetItemsTable<BluetoothPrinter>();
-							string Macaddres =  impresoraGuardad.First().PIM_MACADDRESS.ToString();
-							List<ClsEstructuratiket> estructuratikets = await App.DataBase.GetItemsTable<ClsEstructuratiket>();
-							string tiket = estructuratikets.First().tiket.ToString();
+							List<BluetoothPrinter> impresoraGuardad = new List<BluetoothPrinter>();
+							string Macaddres = ""; 
+							try
+                            { 
+								impresoraGuardad  = await App.DataBase.GetItemsTable<BluetoothPrinter>();
+                                Macaddres = impresoraGuardad.First().PIM_MACADDRESS.ToString();
+                            } catch (Exception){}
 
-							tiket = tiket.Replace("[Fecha]", multa.Fecha_hora_Infraccion.ToString("dd/MM/yyyy"));
-							tiket = tiket.Replace("[Hora]", multa.Fecha_hora_Infraccion.ToString("t"));
+                            List<ClsImpresoras> ListaImpresoras = await App.DataBase.GetItemsTable<ClsImpresoras>(); // lista de impresoras de la base de datos
+                            string MacSelected = ListaImpresoras.FirstOrDefault(x => x.PIM_NOMBRE_IMPRESORA == CBImpresoras.SelectedItem.ToString()).PIM_MACADDRESS.ToString();
+                            
+							List<ClsEstructuratiket> estructuratikets = await App.DataBase.GetItemsTable<ClsEstructuratiket>();
+							
+							string tiket = estructuratikets.First().tiket.ToString();
+							var fileName = "";
+
+                            string codebarras = _printerService.GenerateBarcodeBase64(multa.PIF_FOLIO.ToString());/*retorna base 64 para Codigo de barras*/
+							/*estructura del tiket*/
+                            tiket = tiket.Replace("[logo_Base64]", LogoPNG.logoBase64.ToString());
+                            tiket = tiket.Replace("[Fecha]",multa.Fecha_hora_Infraccion.ToString("dd/MM/yyyy"));
+							tiket = tiket.Replace("[Hora]",	multa.Fecha_hora_Infraccion.ToString("t"));
 							tiket = tiket.Replace("[FOLIO]",multa.PIF_FOLIO);
-							tiket = tiket.Replace("[PROPIETARIO]", "A QUIEN");
-							tiket = tiket.Replace("[PROPIETARIO_apellidos]", "CORRESPONDA");
+							tiket = tiket.Replace("[PROPIETARIO]", "A QUIEN CORRESPONDA");
 							tiket = tiket.Replace("[INSPECTOR]", txtInspector.Text);
-							tiket = tiket.Replace("[INSPECTOR_APELLIDOS]","");
-							tiket = tiket.Replace("[MARCA]", CBMARCA.SelectedItem.ToString());
+							tiket = tiket.Replace("[MARCA]",CBMARCA.SelectedItem.ToString());
 							tiket = tiket.Replace("[LINEA]",CBLINEA.SelectedItem.ToString());
 							tiket = tiket.Replace("[COLOR]",CBCOLOR.SelectedItem.ToString());
 							tiket = tiket.Replace("[PROCEDENCIA]",CBPROCEDENCIA.SelectedItem.ToString());
-							tiket = tiket.Replace("[LUGAR]", CBLUGAR.SelectedItem.ToString());
+							tiket = tiket.Replace("[LUGAR]",CBLUGAR.SelectedItem.ToString());
 							tiket = tiket.Replace("[GARANTIA]",CBGARANTIA.SelectedItem.ToString());
-							tiket = tiket.Replace("[ESTADO]", CBEDOPLACA.SelectedItem.ToString());
+							tiket = tiket.Replace("[ESTADO]",CBEDOPLACA.SelectedItem.ToString());
 							tiket = tiket.Replace("[Num_PLACA]", txtNoPlaca.Text.ToString());
 							tiket = tiket.Replace("[MOTIVO]", CBMOTIVO.SelectedItem.ToString());
-							tiket = tiket.Replace("[MOTIVO_COMPLETO]", "");
-							tiket = tiket.Replace("[IMPORTE]", multa.PIF_IMPORTE.ToString()); 
-							tiket = tiket.Replace("[codigoBarras]","");
-                            //await _printerService.PrintAsync(IMPRESORA_SELECIONADA.PIM_MACADDRESS, zplDataTiket);
-                            bool print = await _printerService.PrintAsync_new(Macaddres, tiket);
+                            tiket = tiket.Replace("[IMPORTE]", multa.PIF_IMPORTE.ToString());
+							tiket = tiket.Replace("[IMPORTE_EN_LETRA]", Montos.First().Monto_En_Letra.ToString());
+							tiket = tiket.Replace("[CODIGOBARRAS]", codebarras);
 
+                            //bool print = await _printerService.PrintAsync_new(Macaddres, tiket);
+                            webView.IsVisible = true;
+                            ImagenTemp.IsVisible = true;
+                            try /*impimimos el tiket*/
+                            {
+                                webView.Source = new HtmlWebViewSource { Html = tiket };
+                                await Task.Delay(2000);
+                                var stream = await webView.CaptureAsync();
+                                using (var fileStream = new FileStream(Path.Combine(FileSystem.CacheDirectory, "screenshot.png"), FileMode.Create))
+                                {
+                                    await stream.CopyToAsync(fileStream);
+                                }
+                                fileName = Path.Combine(FileSystem.CacheDirectory, "screenshot.png");
+                                int wid = 380; //Convert.ToInt32(380);
+                                int hig = 1950;//Convert.ToInt32(1750);
+                                Connection connection = new BluetoothConnection(MacSelected);
+                                connection.Open();
+                                ZebraPrinter zebra = ZebraPrinterFactory.GetInstance(connection);
+                                int x = 0;
+                                int y = 50;
+
+                                zebra.PrintImage( Path.GetFullPath(fileName),x,y,wid,hig,false);
+
+                                connection.Close();
+
+                                try /* GUARDAMOS NUEVA IMPRESORA */
+                                {
+                                    if (Macaddres.Trim().ToString() != MacSelected.Trim().ToString())
+                                    {
+                                        List<BluetoothPrinter> lista = new List<BluetoothPrinter>();
+                                        BluetoothPrinter newPrint = new BluetoothPrinter();
+                                        newPrint.PIM_MACADDRESS = MacSelected;
+                                        lista.Add(newPrint);
+                                        App.DataBase.DropTable<BluetoothPrinter>();
+                                        await App.DataBase.CreateTables<BluetoothPrinter>();
+                                        await App.DataBase.InsertRangeItem<BluetoothPrinter>(lista);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    DisplayAlert("!!ALERTA¡¡", $"FALLO AL GUARDAR LA NUEVA IMPRESORA", "OK");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                DisplayAlert("!!ALERTA¡¡", $"IMPRESORA NO CONECTADA \nINFRACCION GUARDADA EN EL DISPOSITIVO PARA REIMPRIMIR", "OK");
+                            }
+                            webView.IsVisible = false;
+                            ImagenTemp.IsVisible = false;
                             ShowMessage.HideLoading();
 
-                            if (!print)
-                            {ShowMessage.Alert($"Verifica que la impresora este encendida, \n la multa se guardo para reimpimir");}
                         }
 						catch (Exception ex)
 						{
@@ -344,10 +421,7 @@ public partial class Infraciones_Page : ContentPage
 							txtNoPlaca.Text = "";
 							CBMOTIVO.SelectedIndex = -1;
 						}
-						catch (Exception ex)
-						{
-							
-						}
+						catch (Exception ex){}
 
 					}
 				}

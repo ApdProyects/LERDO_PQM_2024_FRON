@@ -173,12 +173,12 @@
                     <Button 
                        FontSize="15"
                        x:Name="btnPruebaImpresion"
-                       Text="----- PRUEBA DE IMPRESIÓN"
+                       Text="PRUEBA DE IMPRESIÓN"
                        TextColor="{StaticResource White}"
                        Background="{StaticResource APDConLema4}"
                        VerticalOptions="Center"></Button>
                 </Border>
-                <Border Margin="-10,5,0,0"
+                <!--<Border Margin="-10,5,0,0"
                      BackgroundColor="{StaticResource APDConLema3}"
                      HeightRequest="50"
                      HorizontalOptions="Start"
@@ -192,12 +192,15 @@
                         FontSize="25"
                         x:Name="btnPruebaImpresionIcono"
                         HorizontalOptions="Center"
-                        Text="&#xE8C0;"
+                        Text="&#xE84;"
                         TextColor="{StaticResource White}"
                         BackgroundColor="{StaticResource APDConLema4}"
                         VerticalOptions="Center"></Button>
-                </Border>
+                </Border>-->
             </Grid>
+            <ScrollView>
+                <WebView x:Name="webView" VerticalOptions="FillAndExpand" IsVisible="False"/>
+            </ScrollView>
         </Grid>
     </Grid>
 </ContentPage>

@@ -28,7 +28,7 @@ namespace Lerdo_MX_PQM.Modelos
         public List<ClsEstructuratiket> listaEstructuratikets { get; set; }
 
         /* Retorna las listas despues del Get */
-        public async Task CatInpectores ()
+        public async Task CatInpectores()
         {
             clsServices service = new clsServices();
             clsRespuesta respuesta  = await service.GetListas("Inspectores/RecuperaInspectores");
@@ -51,7 +51,7 @@ namespace Lerdo_MX_PQM.Modelos
                 }).ToList();
             }
         }
-        public async Task CatMarcas     ()
+        public async Task CatMarcas()
         {
             clsServices service = new clsServices();
             clsRespuesta respuesta = await service.GetListas("Inspectores/RecuperaMarcas");
@@ -66,7 +66,7 @@ namespace Lerdo_MX_PQM.Modelos
                 }).ToList();
             }
         }
-        public async Task CatLineas     ()
+        public async Task CatLineas()
         {
             clsServices service = new clsServices();
             clsRespuesta respuesta = await service.GetListas("Inspectores/RecuperaLineas");
@@ -83,7 +83,7 @@ namespace Lerdo_MX_PQM.Modelos
             }
             
         }
-        public async Task CatColores    ()
+        public async Task CatColores()
         {
             clsServices service = new clsServices();
             clsRespuesta respuesta = await service.GetListas("Inspectores/RecuperaColores");
@@ -97,7 +97,7 @@ namespace Lerdo_MX_PQM.Modelos
                 }).ToList();
             }
         }
-        public async Task CatGarantias  ()
+        public async Task CatGarantias()
         {
             clsServices service = new clsServices();
             clsRespuesta respuesta = await service.GetListas("Inspectores/RecuperaGarantias");
@@ -111,7 +111,7 @@ namespace Lerdo_MX_PQM.Modelos
                 }).ToList();
             }
         }
-        public async Task CatEstados    ()
+        public async Task CatEstados()
         {
             clsServices service = new clsServices();
             clsRespuesta respuesta = await service.GetListas("Inspectores/RecuperaEstados");
@@ -125,7 +125,7 @@ namespace Lerdo_MX_PQM.Modelos
                 }).ToList();
             }
         }
-        public async Task CatLugares    ()
+        public async Task CatLugares()
         {
             clsServices service = new clsServices();
             clsRespuesta respuesta = await service.GetListas("Inspectores/RecuperaLugares");
@@ -193,10 +193,10 @@ namespace Lerdo_MX_PQM.Modelos
                 List<MontoInfraccion> resJson = JsonConvert.DeserializeObject<List<MontoInfraccion>>(respuesta.ListaResultado.ToString());
                 this.listaMonto = resJson.Select(i => new MontoInfraccion
                 {
-                    Monto = i.Monto
+                    Monto = i.Monto,
+                    Monto_En_Letra = i.Monto_En_Letra
                 }).ToList();
             }
-
         }
         public async Task catEstructuratikets()
         {
@@ -330,7 +330,7 @@ namespace Lerdo_MX_PQM.Modelos
             {
                 clsServices service = new clsServices();
                 clsRespuesta respuesta = await service.GetListas("Inspectores/verificarConexion");
-                if (respuesta.codigo == 1 && respuesta.codigoError == 0)
+                if (respuesta.codigo == 1 && respuesta.codigoError == 200)
                 { res = true; }
                 else
                 { res = false; }
@@ -516,6 +516,5 @@ namespace Lerdo_MX_PQM.Modelos
             }
             return listaInsRES;
         }
-
     }
 }
