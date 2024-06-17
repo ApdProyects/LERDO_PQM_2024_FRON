@@ -70,7 +70,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Platforms\Android\AndroidManifest.xml" />
 	  <None Remove="Resources\Fonts\fontello.ttf" />
 	  <None Remove="Resources\Images\hanburguer.png" />
 	  <None Remove="Resources\Images\icon_img.png" />
