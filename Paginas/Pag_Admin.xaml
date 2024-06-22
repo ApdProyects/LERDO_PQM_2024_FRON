@@ -21,7 +21,7 @@
             HorizontalOptions="Center"
             VerticalOptions="Center"
             Clicked="guardar_url_Clicked"
-            Text="GUARDAR NUEVA URL DEL SERVIDORL"
+            Text="GUARDAR NUEVA URL DEL SERVIDOR"
             TextColor="{StaticResource White}"
             BackgroundColor="{StaticResource APDConLema4}"
             ></Button>

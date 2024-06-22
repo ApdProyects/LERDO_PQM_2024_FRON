@@ -453,12 +453,13 @@ namespace Lerdo_MX_PQM.Modelos
                             if (index != -1)
                             {
                                 AllInfraccionesSQLite.RemoveAt(index);
+
+                                Multa.Det_Sync = true;
+                                AllInfraccionesSQLite.Add(Multa);
+                                App.DataBase.DropTable<Infracciones>();
+                                await App.DataBase.CreateTables<Infracciones>();
+                                await App.DataBase.InsertRangeItem<Infracciones>(AllInfraccionesSQLite);
                             }
-                            Multa.Det_Sync = true;
-                            AllInfraccionesSQLite.Add(Multa);
-                            App.DataBase.DropTable<Infracciones>();
-                            await App.DataBase.CreateTables<Infracciones>();
-                            await App.DataBase.InsertRangeItem<Infracciones>(AllInfraccionesSQLite);
                         }
                     }
                     catch (Exception ex)

@@ -129,7 +129,7 @@ namespace Lerdo_MX_PQM
             stack.Children.Add(Indicar);
 
             Label lbl = new Label();
-            lbl.Text = "Verificando Conexion ...";
+            lbl.Text = "Verificando Servidor ...";
             lbl.FontSize = 20;
             lbl.TextColor = Color.FromHex("#ffffff");
             lbl.Margin = new Thickness(0, 13, 0, 0);
@@ -183,7 +183,7 @@ namespace Lerdo_MX_PQM
             stack.Children.Add(Indicar);
 
             Label lbl = new Label();
-            lbl.Text = "Verificando Servidor ...";
+            lbl.Text = $"Verificando \nServidor de Datos...";
             lbl.FontSize = 20;
             lbl.TextColor = Color.FromHex("#ffffff");
             lbl.Margin = new Thickness(0, 13, 0, 0);

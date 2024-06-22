@@ -1,4 +1,5 @@
 using Android.App.AppSearch;
+using Android.Text;
 using Lerdo_MX_PQM.Helpers;
 using Lerdo_MX_PQM.Modelos;
 
@@ -38,8 +39,11 @@ public partial class Sincronizar_Page : ContentPage
         bool checkinternet = false;
         bool checkServer = false;
         bool sinc = false;
+        bool ActfolioServer = false;
         try
         {
+            List<InspectorLogin> UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
+
             List<Infracciones> listaInfraccionMostrar = new List<Infracciones>();
             listaInfraccion = await App.DataBase.GetItemsTable<Infracciones>();
             if (listaInfraccion.Where(x => x.Det_Sync == false).Count() > 0)
@@ -57,16 +61,17 @@ public partial class Sincronizar_Page : ContentPage
                     {
                         ShowMessage.ShowSendData();
                         sinc = await catalogos.SincronizaFolios();
+                        ActfolioServer = await catalogos.ActFolInsp(UsuarioLogin.First().PIN_FOLIO, UsuarioLogin.First().PIN_CLAVE);
                         ShowMessage.HideSendData();
                         if (!sinc)
-                        { ShowMessage.Alert("Error al sincronizar, Intentelo mas tarde"); }
+                        { ShowMessage.Alert($"Error al sincronizar,\n Intentelo mas tarde"); }
                         CargaLista();
                     }
-                    else { ShowMessage.Alert("Sin Acceso al Servidor"); }
+                    else { ShowMessage.Alert("Sin acceso al servidor de datos"); }
                 }
-                else { ShowMessage.Alert("App Sin Acceso a Internet"); }
+                else { ShowMessage.Alert("App sin acceso al servidor"); }
             }
-            else { ShowMessage.Alert("No Existen Infracciones Pendiente "); }
+            else { ShowMessage.Alert("No existen infracciones pendiente "); }
 
         }
         catch (Exception ex)

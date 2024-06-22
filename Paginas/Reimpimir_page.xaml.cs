@@ -24,15 +24,46 @@ public partial class Reimpimir_page : ContentPage
     }
     private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
     {
-        /**/
-        SearchBar searchBar = (SearchBar)sender;
-        string searchText = searchBar.Text;
-        var filteredList = listaInfracciones
-                            .Where(i => i.PIF_FOLIO.ToString().Contains(searchText.ToLower()) || 
-                                        i.PIF_PLACAS.ToString().Contains(searchText.ToLower()))
-                            .OrderByDescending(i => i.Fecha_hora_Infraccion)
-                            .ToList();
-        searchResults.ItemsSource = filteredList;
+        try
+        {
+            SearchBar searchBar = (SearchBar)sender;
+            string searchText = searchBar.Text;
+
+            // Definir una lista de caracteres no permitidos
+            char[] forbiddenChars = new char[] {',', ';', '.', ':', '!', '@', '#', '°', '|', '¬', '$', '%', '&', '/', '(',
+                                            ')', '=', '"', char.Parse("'"), '´', '?', '¿', '¡', '¨', '+', '*', '{',
+                                            '}', '[', ']', '`', '^', '_', '<', '>', ' ' };
+
+            // Eliminar los caracteres no permitidos
+            foreach (var ch in forbiddenChars)
+            {
+                searchText = searchText.Replace(ch.ToString(), "");
+            }
+
+            // Actualizar el texto en el Buscador si se eliminó algún carácter
+            Buscador.Text = searchText;
+
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                return;
+            }
+            else
+            {
+                // Filtrar la lista de infracciones
+                var filteredList = listaInfracciones
+                                    .Where(i => i.PIF_FOLIO.ToString().Contains(searchText) ||
+                                                i.PIF_PLACAS.ToString().Contains(searchText))
+                                    .OrderByDescending(i => i.Fecha_hora_Infraccion)
+                                    .ToList();
+
+                // Actualizar los resultados de la búsqueda
+                searchResults.ItemsSource = filteredList;
+            }
+        }
+        catch (Exception ex)
+        {
+            DisplayAlert("ALERTA", ex.Message, "OK");
+        }
     }
 
     private void SearchBar_SearchButtonPressed(object sender, EventArgs e)

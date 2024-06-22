@@ -71,7 +71,7 @@ public partial class Infraciones_Page : ContentPage
 				}
 			}
 			catch (Exception){
-				DisplayAlert("¡¡CUIDADO!!" , $"NO EXISTE UNA IMPRESORA PRECARGADA. \nACTUALIZE EL CATALOGO O SELECCIONE UNA", "OK");
+				DisplayAlert("¡¡CUIDADO!!" , $"NO EXISTE UNA IMPRESORA PRECARGADA. \nACTUALICE EL CATALOGO O SELECCIONE UNA", "OK");
 
             }
             ShowMessage.HideLoading();
@@ -213,12 +213,20 @@ public partial class Infraciones_Page : ContentPage
 					{
 						await App.DataBase.InsertRangeItem<Infracciones>(Listamultas);
 						MultaGuardadaSQLLite = true;
-						//UsuarioLogin.First().PIN_FOLIO += 1;
 
-						//App.DataBase.DropTable<InspectorLogin>();
-						//await App.DataBase.CreateTables<InspectorLogin>();
-						//await App.DataBase.InsertRangeItem<InspectorLogin>(UsuarioLogin);
-						//ActUltimoFoli = true;
+                        UltimasInfracciones ulimas = new UltimasInfracciones();
+						List<UltimasInfracciones> ListaUltimas = new List<UltimasInfracciones>();
+						ulimas.PIF_FOLIO = multa.PIF_FOLIO;
+						ulimas.PIF_PLACAS = multa.PIF_PLACAS;
+						ulimas.PIF_INFRACCION_FECHA = multa.Fecha_hora_Infraccion;
+                        ListaUltimas.Add(ulimas);
+						await App.DataBase.InsertRangeItem<UltimasInfracciones>(ListaUltimas);
+                        //UsuarioLogin.First().PIN_FOLIO += 1;
+
+                        //App.DataBase.DropTable<InspectorLogin>();
+                        //await App.DataBase.CreateTables<InspectorLogin>();
+                        //await App.DataBase.InsertRangeItem<InspectorLogin>(UsuarioLogin);
+                        //ActUltimoFoli = true;
 
                         ListaInspector = await App.DataBase.GetItemsTable<clsInspector>();
                         int index = ListaInspector.FindIndex(i => i.PIN_CLAVE == UsuarioLogin.First().PIN_CLAVE);
@@ -270,9 +278,9 @@ public partial class Infraciones_Page : ContentPage
 									if (!MultaInServer)
 									{ ShowMessage.Alert("Error al Enviar el Tiket");}
 								}
-								else{ShowMessage.Alert("Sin Acceso al Servidor");}
+								else{ShowMessage.Alert("Sin Acceso al Servidor de datos");}
 							}
-							else { ShowMessage.Alert("Sin Conexion a Internet"); }
+							else { ShowMessage.Alert("Servidor sin internet"); }
 						}
 						catch (Exception er)
 						{
@@ -308,9 +316,9 @@ public partial class Infraciones_Page : ContentPage
 						}
 
 						/*Imprimir Tiket*/
+						ShowMessage.ShowLoading();
 						try
 						{
-							ShowMessage.ShowLoading();
 							List<BluetoothPrinter> impresoraGuardad = new List<BluetoothPrinter>();
 							string Macaddres = ""; 
 							try
@@ -330,26 +338,26 @@ public partial class Infraciones_Page : ContentPage
                             string codebarras = _printerService.GenerateBarcodeBase64(multa.PIF_FOLIO.ToString());/*retorna base 64 para Codigo de barras*/
 							/*estructura del tiket*/
                             tiket = tiket.Replace("[logo_Base64]", LogoPNG.logoBase64.ToString());
-                            tiket = tiket.Replace("[Fecha]",multa.Fecha_hora_Infraccion.ToString("dd/MM/yyyy"));
-							tiket = tiket.Replace("[Hora]",	multa.Fecha_hora_Infraccion.ToString("t"));
-							tiket = tiket.Replace("[FOLIO]",multa.PIF_FOLIO);
+                            tiket = tiket.Replace("[Fecha]",	multa.Fecha_hora_Infraccion.ToString("dd/MM/yyyy"));
+							tiket = tiket.Replace("[Hora]",		multa.Fecha_hora_Infraccion.ToString("t"));
+							tiket = tiket.Replace("[FOLIO]",	multa.PIF_FOLIO);
 							tiket = tiket.Replace("[PROPIETARIO]", "A QUIEN CORRESPONDA");
-							tiket = tiket.Replace("[INSPECTOR]", txtInspector.Text);
-							tiket = tiket.Replace("[MARCA]",CBMARCA.SelectedItem.ToString());
-							tiket = tiket.Replace("[LINEA]",CBLINEA.SelectedItem.ToString());
-							tiket = tiket.Replace("[COLOR]",CBCOLOR.SelectedItem.ToString());
+							tiket = tiket.Replace("[INSPECTOR]",txtInspector.Text);
+							tiket = tiket.Replace("[MARCA]",	CBMARCA.SelectedItem.ToString());
+							tiket = tiket.Replace("[LINEA]",	CBLINEA.SelectedItem.ToString());
+							tiket = tiket.Replace("[COLOR]",	CBCOLOR.SelectedItem.ToString());
 							tiket = tiket.Replace("[PROCEDENCIA]",CBPROCEDENCIA.SelectedItem.ToString());
-							tiket = tiket.Replace("[LUGAR]",CBLUGAR.SelectedItem.ToString());
-							tiket = tiket.Replace("[GARANTIA]",CBGARANTIA.SelectedItem.ToString());
-							tiket = tiket.Replace("[ESTADO]",CBEDOPLACA.SelectedItem.ToString());
-							tiket = tiket.Replace("[Num_PLACA]", txtNoPlaca.Text.ToString());
-							tiket = tiket.Replace("[MOTIVO]", CBMOTIVO.SelectedItem.ToString());
-                            tiket = tiket.Replace("[IMPORTE]", multa.PIF_IMPORTE.ToString());
+							tiket = tiket.Replace("[LUGAR]",	CBLUGAR.SelectedItem.ToString());
+							tiket = tiket.Replace("[GARANTIA]",	CBGARANTIA.SelectedItem.ToString());
+							tiket = tiket.Replace("[ESTADO]",	CBEDOPLACA.SelectedItem.ToString());
+							tiket = tiket.Replace("[Num_PLACA]",txtNoPlaca.Text.ToString());
+							tiket = tiket.Replace("[MOTIVO]",	CBMOTIVO.SelectedItem.ToString());
+                            tiket = tiket.Replace("[IMPORTE]",	multa.PIF_IMPORTE.ToString());
 							tiket = tiket.Replace("[IMPORTE_EN_LETRA]", Montos.First().Monto_En_Letra.ToString());
 							tiket = tiket.Replace("[CODIGOBARRAS]", codebarras);
 
                             //bool print = await _printerService.PrintAsync_new(Macaddres, tiket);
-                            webView.IsVisible = true;
+                            //webView.IsVisible = true;
                             ImagenTemp.IsVisible = true;
                             try /*impimimos el tiket*/
                             {
@@ -371,6 +379,7 @@ public partial class Infraciones_Page : ContentPage
 
                                 zebra.PrintImage( Path.GetFullPath(fileName),x,y,wid,hig,false);
 
+                                zebra.PrintImage(Path.GetFullPath(fileName), x, y, wid, hig, false);
                                 connection.Close();
 
                                 try /* GUARDAMOS NUEVA IMPRESORA */
@@ -395,19 +404,18 @@ public partial class Infraciones_Page : ContentPage
                             {
                                 DisplayAlert("!!ALERTA¡¡", $"IMPRESORA NO CONECTADA \nINFRACCION GUARDADA EN EL DISPOSITIVO PARA REIMPRIMIR", "OK");
                             }
-                            webView.IsVisible = false;
+                            //webView.IsVisible = false;
                             ImagenTemp.IsVisible = false;
-                            ShowMessage.HideLoading();
-
                         }
 						catch (Exception ex)
 						{
 							ShowMessage.HideLoading();
 							ShowMessage.Alert("Error: " + ex.Message);
 						}
+                        ShowMessage.HideLoading();
 
-						/*Limpia parametros para nueva multa*/
-						try
+                        /*Limpia parametros para nueva multa*/
+                        try
 						{
 							string folio = "030092" + PIN_CLAVE.ToString("D3") + inspector.PIN_FOLIO.ToString("D5");
 							txtFolio.Text = folio;
@@ -422,7 +430,6 @@ public partial class Infraciones_Page : ContentPage
 							CBMOTIVO.SelectedIndex = -1;
 						}
 						catch (Exception ex){}
-
 					}
 				}
 				else

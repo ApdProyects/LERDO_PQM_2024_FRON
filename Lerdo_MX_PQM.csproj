@@ -42,10 +42,15 @@
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
 	  <RunAOTCompilation>True</RunAOTCompilation>
 	  <AndroidEnableProfiledAot>True</AndroidEnableProfiledAot>
+	  <AndroidCreatePackagePerAbi>True</AndroidCreatePackagePerAbi>
+	  <DebugSymbols>True</DebugSymbols>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <AndroidCreatePackagePerAbi>True</AndroidCreatePackagePerAbi>
+	  <DebugSymbols>False</DebugSymbols>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -77,7 +82,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiIcon Include="Resources\AppIcon\icon.png" />
+	  <MauiImage Include="Resources\AppIcon\icon.png" />
 	  <MauiImage Include="Resources\Splash\icon_app.png" />
 	</ItemGroup>
 
