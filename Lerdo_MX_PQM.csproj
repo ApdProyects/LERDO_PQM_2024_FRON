@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-android</TargetFrameworks>
+		<TargetFrameworks>net8.0-android34.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
 
@@ -53,9 +53,15 @@
 	  <DebugSymbols>False</DebugSymbols>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</MauiIcon>
 		<!--<MauiIcon Include="Resources\AppIcon\icon.png" BaseSize="128,128"/>-->
 		<!--<MauiIcon Include="Resources\AppIcon\icon.png" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF" />-->
 		<!--<MauiIcon Include="Resources\Splash\icon_app.png" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />-->
@@ -82,7 +88,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiImage Include="Resources\AppIcon\icon.png" />
+	  <MauiImage Include="Resources\AppIcon\icon.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </MauiImage>
 	  <MauiImage Include="Resources\Splash\icon_app.png" />
 	</ItemGroup>
 
@@ -96,6 +104,7 @@
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.8" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="System.Drawing.Common" Version="8.0.6" />
+		<PackageReference Include="Zebra.Printer.SDK" Version="3.0.3271" />
 		<PackageReference Include="ZXing.Net.Maui" Version="0.4.0" />
 	</ItemGroup>
 
@@ -149,6 +158,12 @@
 	  <Compile Update="Paginas\Pag_Admin.xaml.cs">
 	    <DependentUpon>Pag_Admin.xaml</DependentUpon>
 	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Resources\AppIcon\appiconfg.svg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

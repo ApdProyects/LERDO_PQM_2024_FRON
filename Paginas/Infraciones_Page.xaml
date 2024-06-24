@@ -145,9 +145,39 @@
                 BorderWidth="1"
                 VerticalOptions="Center"></Button>
         </StackLayout>
+
         
+        
+        <Grid Grid.Row="0" Grid.RowSpan="3" x:Name="grdLoading" BackgroundColor="{StaticResource White}" IsVisible="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>       
+                <RowDefinition Height="4.2*"/>
+                <RowDefinition Height="1.6*"/>
+                <RowDefinition Height="4.2*"/>
+            </Grid.RowDefinitions>
+
+            <StackLayout x:Name="gridLoadingBox" Grid.Row="1" Grid.Column="1" BackgroundColor="#009D71">
+                <ActivityIndicator 
+                    Color="White"
+                    IsRunning="True"
+                    Margin="0,14,0,0"/>
+                <Label 
+                        x:Name="lblCarga"
+                        TextColor="{StaticResource White}"
+                        Text="Imprimiendo...."
+                        FontSize="20"
+                        HorizontalTextAlignment="Center"
+                        Margin="0,13,0,0"/>
+            </StackLayout>
+
+        </Grid>
+
         <ScrollView Grid.Row="3" x:Name="ImagenTemp" IsVisible="True">
-            <WebView Margin="0,0,0,0" x:Name="webView" VerticalOptions="FillAndExpand" IsVisible="False" />
+            <WebView Margin="-30,0,-30,0" x:Name="webView" VerticalOptions="FillAndExpand" IsVisible="False" />
         </ScrollView>
     </Grid>
     

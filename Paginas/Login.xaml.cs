@@ -241,11 +241,11 @@ public partial class Login : ContentPage
                     }
                     else {
                         ServerOn = false;
-                        ShowMessage.Alert("Sin Acceso al Servidor"); }
+                        ShowMessage.Alert("Sin Acceso al Servidor de Datos"); }
                 }
                 else {
                     InternetOn = false;
-                    ShowMessage.Alert("App Sin Acceso a Internet"); }
+                    ShowMessage.Alert("App Sin Acceso al Servidor"); }
             }
         }
         catch (Exception ex)

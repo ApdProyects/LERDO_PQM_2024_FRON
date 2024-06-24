@@ -317,7 +317,9 @@ public partial class Infraciones_Page : ContentPage
 
 						/*Imprimir Tiket*/
 						ShowMessage.ShowLoading();
-						try
+						grdLoading.IsVisible = true;
+
+                        try
 						{
 							List<BluetoothPrinter> impresoraGuardad = new List<BluetoothPrinter>();
 							string Macaddres = ""; 
@@ -359,6 +361,7 @@ public partial class Infraciones_Page : ContentPage
                             //bool print = await _printerService.PrintAsync_new(Macaddres, tiket);
 							webView.IsVisible = true;
                             ImagenTemp.IsVisible = true;
+
                             try /*impimimos el tiket*/
                             {
                                 webView.Source = new HtmlWebViewSource { Html = tiket };
@@ -410,8 +413,9 @@ public partial class Infraciones_Page : ContentPage
 							ShowMessage.HideLoading();
 							ShowMessage.Alert("Error: " + ex.Message);
 						}
-                        ShowMessage.HideLoading();
-
+                        
+                        grdLoading.IsVisible = false;
+						ShowMessage.HideLoading();
                         /*Limpia parametros para nueva multa*/
                         try
 						{
