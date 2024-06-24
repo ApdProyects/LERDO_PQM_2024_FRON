@@ -122,7 +122,6 @@ public partial class Reimpimir_page : ContentPage
                         List<BluetoothPrinter> impresoraGuardad = new List<BluetoothPrinter>();
                         string Macaddres = "";
                         List<ClsEstructuratiket> estructuratikets = await App.DataBase.GetItemsTable<ClsEstructuratiket>();
-
                         List<clsInspector> ListaInspector = await App.DataBase.GetItemsTable<clsInspector>();
                         List<clsMarcas> ListaMarcas = await App.DataBase.GetItemsTable<clsMarcas>();    /*marcas*/
                         List<clsLineas> ListaLineas = await App.DataBase.GetItemsTable<clsLineas>();    /**/
@@ -133,7 +132,6 @@ public partial class Reimpimir_page : ContentPage
                         List<clsEstados> ListaEstados = await App.DataBase.GetItemsTable<clsEstados>();
                         List<clsMotivos> ListaMotivos = await App.DataBase.GetItemsTable<clsMotivos>();
                         List<MontoInfraccion> motno = await App.DataBase.GetItemsTable<MontoInfraccion>();
-
 
                         //CBImpresoras.SelectedItem.ToString();
                         List<ClsImpresoras> ListaImpresoras = await App.DataBase.GetItemsTable<ClsImpresoras>(); // lista de impresoras de la base de datos
@@ -190,11 +188,8 @@ public partial class Reimpimir_page : ContentPage
                             ZebraPrinter zebra = ZebraPrinterFactory.GetInstance(connection);
                             int x = 0;
                             int y = 50;
-
                             zebra.PrintImage(Path.GetFullPath(fileName), x, y, wid, hig, false);
-
                             connection.Close();
-
                             try /* GUARDAMOS NUEVA IMPRESORA */
                             {
                                 if (Macaddres.Trim().ToString() != MacSelected.Trim().ToString())

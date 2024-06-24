@@ -357,7 +357,7 @@ public partial class Infraciones_Page : ContentPage
 							tiket = tiket.Replace("[CODIGOBARRAS]", codebarras);
 
                             //bool print = await _printerService.PrintAsync_new(Macaddres, tiket);
-                            //webView.IsVisible = true;
+							webView.IsVisible = true;
                             ImagenTemp.IsVisible = true;
                             try /*impimimos el tiket*/
                             {
@@ -376,9 +376,7 @@ public partial class Infraciones_Page : ContentPage
                                 ZebraPrinter zebra = ZebraPrinterFactory.GetInstance(connection);
                                 int x = 0;
                                 int y = 50;
-
                                 zebra.PrintImage( Path.GetFullPath(fileName),x,y,wid,hig,false);
-
                                 zebra.PrintImage(Path.GetFullPath(fileName), x, y, wid, hig, false);
                                 connection.Close();
 
@@ -404,7 +402,7 @@ public partial class Infraciones_Page : ContentPage
                             {
                                 DisplayAlert("!!ALERTA¡¡", $"IMPRESORA NO CONECTADA \nINFRACCION GUARDADA EN EL DISPOSITIVO PARA REIMPRIMIR", "OK");
                             }
-                            //webView.IsVisible = false;
+                            webView.IsVisible = false;
                             ImagenTemp.IsVisible = false;
                         }
 						catch (Exception ex)
