@@ -17,21 +17,23 @@
                 TextColor="{StaticResource lemaAPD}"></Picker>
         </StackLayout>
         <Grid Grid.Row="1" RowDefinitions="Auto, *">
-            <SearchBar Grid.Row="0" 
-                       TextChanged="SearchBar_TextChanged"
-                       CancelButtonColor="Red"
-                       CharacterSpacing="5"
-                       CursorPosition="5"
-                       FontFamily="OpenSansRegular"
-                       Placeholder="INGRESE UN FOLIO O PLACA"
-                       PlaceholderColor="Gray"
-                       SelectionLength="10"
-                       TextColor="Gray"
-                       VerticalTextAlignment="Center"
-                       SearchButtonPressed="SearchBar_SearchButtonPressed"
-                       Margin="0,0,0,20"
-                       x:Name="Buscador"
-                       />
+            <SearchBar 
+                Grid.Row="0" 
+                TextChanged="SearchBar_TextChanged"
+                CancelButtonColor="Red"
+                CharacterSpacing="5"
+                CursorPosition="5"
+                FontFamily="OpenSansRegular"
+                Placeholder="INGRESE UN FOLIO O PLACA"
+                PlaceholderColor="Gray"
+                SelectionLength="10"
+                TextColor="Gray"
+                VerticalTextAlignment="Center"
+                SearchButtonPressed="SearchBar_SearchButtonPressed"
+                Margin="0,0,0,20"
+                x:Name="Buscador"
+                MaxLength="20"
+                />
             <ScrollView Grid.Row="1">
                 <ListView x:Name="searchResults"
                           ItemSelected="searchResults_ItemSelected"

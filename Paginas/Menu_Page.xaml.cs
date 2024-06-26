@@ -94,13 +94,13 @@ public partial class Menu_Page : ContentPage
         ShowMessage.HideLoading();
         if (respuesta == "1")
         {
-            ShowMessage.Alert("Sincronizacion Finalizada");
+            ShowMessage.Alert("SINCRONIZACIÓN FINALIZADA");
         }
         else
         {
             if (respuesta == "2")
             {
-                ShowMessage.Alert("Sincronizacion Fallida");
+                ShowMessage.Alert("SINCRONIZACIÓN FALLIDA");
             }
             else
             {

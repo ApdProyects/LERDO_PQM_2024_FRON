@@ -128,7 +128,7 @@ public partial class Infraciones_Page : ContentPage
 		List<Infracciones> Listamultas;
         List<Infracciones> Lista_multas_para_actualizar;
 
-		/**/
+		/*actualiza el inspector su consecutivo.*/
 		List<clsInspector> ListaInspector = new List<clsInspector>();
 		clsInspector inspector = new clsInspector();
 
@@ -226,7 +226,6 @@ public partial class Infraciones_Page : ContentPage
                         //App.DataBase.DropTable<InspectorLogin>();
                         //await App.DataBase.CreateTables<InspectorLogin>();
                         //await App.DataBase.InsertRangeItem<InspectorLogin>(UsuarioLogin);
-                        //ActUltimoFoli = true;
 
                         ListaInspector = await App.DataBase.GetItemsTable<clsInspector>();
                         int index = ListaInspector.FindIndex(i => i.PIN_CLAVE == UsuarioLogin.First().PIN_CLAVE);
@@ -239,8 +238,8 @@ public partial class Infraciones_Page : ContentPage
                             App.DataBase.DropTable<clsInspector>();
                             await App.DataBase.CreateTables<clsInspector>();
                             await App.DataBase.InsertRangeItem<clsInspector>(ListaInspector);
+                            ActUltimoFoli = true;
                         }
-
                         ShowMessage.HideLoading();
 					}
 					catch (Exception er)
