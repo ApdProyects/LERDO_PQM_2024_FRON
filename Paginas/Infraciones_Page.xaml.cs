@@ -102,11 +102,18 @@ public partial class Infraciones_Page : ContentPage
 
     private async void btnGuardar_Clicked(object sender, EventArgs e)
     {
+		int folioOld = 0
+			, folioUser = 0
+			, folioInsp = 0;
+			
+
 		bool
 			ExistsTablaInfraciones = false,
 			MultaGuardadaSQLLite = false,
 			MultaInServer = false,
 			ActUltimoFoli = false,
+			ActListaFolios = false,
+            ActFoliosUsuariosLogin = false,
             ActfolioServer = false,
             Imprimimostiket = false,
 			checkInternet = false,
@@ -211,34 +218,82 @@ public partial class Infraciones_Page : ContentPage
 					/* guardamos la multa en SQLLite */
 					try
 					{
-						await App.DataBase.InsertRangeItem<Infracciones>(Listamultas);
-						MultaGuardadaSQLLite = true;
+						try
+						{
+							await App.DataBase.InsertRangeItem<Infracciones>(Listamultas);
+							MultaGuardadaSQLLite = true;
+						}
+						catch (Exception) 
+						{ 
+							MultaGuardadaSQLLite = false;
+                            DisplayAlert("!!ALERTA¡¡", $"FALLO AL GUARDAR LA MUTLA, EN EL TELEFONO INTENTE NUEVAMENTE", "OK");
+                        }
 
-                        UltimasInfracciones ulimas = new UltimasInfracciones();
-						List<UltimasInfracciones> ListaUltimas = new List<UltimasInfracciones>();
-						ulimas.PIF_FOLIO = multa.PIF_FOLIO;
-						ulimas.PIF_PLACAS = multa.PIF_PLACAS;
-						ulimas.PIF_INFRACCION_FECHA = multa.Fecha_hora_Infraccion;
-                        ListaUltimas.Add(ulimas);
-						await App.DataBase.InsertRangeItem<UltimasInfracciones>(ListaUltimas);
-                        //UsuarioLogin.First().PIN_FOLIO += 1;
+						if (MultaGuardadaSQLLite)
+						{
+                            try
+                            {
+								folioOld = UsuarioLogin.First().PIN_FOLIO;
+                                /*	ACTUALIZAMOS EL FOLIO DE LOS Inspector_Logeado	*/
+                                UsuarioLogin.First().PIN_FOLIO += 1;
+								folioUser = UsuarioLogin.First().PIN_FOLIO;
+                                App.DataBase.DropTable<InspectorLogin>();
+								await App.DataBase.CreateTables<InspectorLogin>();
+								await App.DataBase.InsertRangeItem<InspectorLogin>(UsuarioLogin);
+								/*	ACTUALIZAMOS EL FOLIO DE LOS Inspector_Logeado	*/
+								ActFoliosUsuariosLogin = true;
 
-                        //App.DataBase.DropTable<InspectorLogin>();
-                        //await App.DataBase.CreateTables<InspectorLogin>();
-                        //await App.DataBase.InsertRangeItem<InspectorLogin>(UsuarioLogin);
+								if (ActFoliosUsuariosLogin)
+								{
+									try
+									{
+                                        /*	ACTUALIZAMOS EL FOLIO DE LOS INSPECTORES	*/
+                                        ListaInspector = await App.DataBase.GetItemsTable<clsInspector>();
+                                        int index = ListaInspector.FindIndex(i => i.PIN_CLAVE == UsuarioLogin.First().PIN_CLAVE);
+                                        inspector = ListaInspector[index];
+                                        if (index > -1)
+                                        {
+                                            ListaInspector.RemoveAt(index);
+                                            inspector.PIN_FOLIO += 1;
+											folioInsp = inspector.PIN_FOLIO; /*FOLIO */
+                                            ListaInspector.Add(inspector);
+                                            App.DataBase.DropTable<clsInspector>();
+                                            await App.DataBase.CreateTables<clsInspector>();
+                                            await App.DataBase.InsertRangeItem<clsInspector>(ListaInspector);
+                                            ActUltimoFoli = true;
+                                        }
+                                        /*	ACTUALIZAMOS EL FOLIO DE LOS INSPECTORES	*/
+                                    }
+                                    catch (Exception)
+									{
 
-                        ListaInspector = await App.DataBase.GetItemsTable<clsInspector>();
-                        int index = ListaInspector.FindIndex(i => i.PIN_CLAVE == UsuarioLogin.First().PIN_CLAVE);
-                        inspector = ListaInspector[index];
-                        if (index > -1)
-                        {
-                            ListaInspector.RemoveAt(index);
-                            inspector.PIN_FOLIO += 1;
-                            ListaInspector.Add(inspector);
-                            App.DataBase.DropTable<clsInspector>();
-                            await App.DataBase.CreateTables<clsInspector>();
-                            await App.DataBase.InsertRangeItem<clsInspector>(ListaInspector);
-                            ActUltimoFoli = true;
+                                        ActUltimoFoli = false;
+                                        DisplayAlert("!!ALERTA¡¡", $"Fallo al aumentar el consecutivo del inspector.,\n COMUNICATE CON SISTEMAS", "OK");
+                                    }
+
+                                    if (ActUltimoFoli)
+                                    {
+                                        try
+                                        {
+                                            UltimasInfracciones ulimas = new UltimasInfracciones();
+                                            List<UltimasInfracciones> ListaUltimas = new List<UltimasInfracciones>();
+                                            ulimas.PIF_FOLIO = multa.PIF_FOLIO;
+                                            ulimas.PIF_PLACAS = multa.PIF_PLACAS;
+                                            ulimas.PIF_INFRACCION_FECHA = multa.Fecha_hora_Infraccion;
+                                            ListaUltimas.Add(ulimas);
+                                            await App.DataBase.InsertRangeItem<UltimasInfracciones>(ListaUltimas);
+                                            ActListaFolios = true;
+                                        }
+                                        catch (Exception) { ActListaFolios = false; }
+                                    }
+                                }
+                            }
+                            catch (Exception) 
+							{ 
+								ActFoliosUsuariosLogin = false;
+                                DisplayAlert("!!ALERTA¡¡", $"Fallo al aumentar el consecutivo de usuarios,\n COMUNICATE CON SISTEMAS", "OK");
+                            }
+                            
                         }
                         ShowMessage.HideLoading();
 					}
@@ -247,10 +302,11 @@ public partial class Infraciones_Page : ContentPage
 						ShowMessage.HideLoading();
 						MultaGuardadaSQLLite = false;
 						ActUltimoFoli = false;
-						ShowMessage.Alert("Error: " + er.Message);
+						ActListaFolios = false;
+                        ShowMessage.Alert("Error: " + er.Message);
 					}
 				
-					if (MultaGuardadaSQLLite)
+					if (MultaGuardadaSQLLite && ActUltimoFoli && ActFoliosUsuariosLogin)
 					{
 						/*	Manda :
 								-verificar conexion

@@ -282,7 +282,7 @@ public partial class Login : ContentPage
                         User.User_act = true;
                         User.PIN_CLAVE = inspector.First().PIN_CLAVE;
                         User.PIN_NOMBRE = inspector.First().PIN_NOMBRE;
-                        //User.PIN_FOLIO = inspector.First().PIN_FOLIO; // posible eliminacion
+                        User.PIN_FOLIO = inspector.First().PIN_FOLIO; // posible eliminacion
                         UserList.Add(User);
 
                         App.DataBase.DropTable<InspectorLogin>();
