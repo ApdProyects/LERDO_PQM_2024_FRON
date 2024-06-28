@@ -335,7 +335,7 @@ public partial class Infraciones_Page : ContentPage
 								}
 								else{ShowMessage.Alert("Sin Acceso al Servidor de datos");}
 							}
-							else { ShowMessage.Alert("Servidor sin internet"); }
+							else { ShowMessage.Alert("Sin acceso a internet"); }
 						}
 						catch (Exception er)
 						{

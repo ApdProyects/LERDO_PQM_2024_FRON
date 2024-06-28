@@ -30,7 +30,7 @@
             <Label Text="APD DESARROLLO MOVIL 2024" TextColor="DarkGray"/>
         </StackLayout>
 
-        
+
         <Grid Grid.Row="1" Margin="10,20,10,10">
             <StackLayout>
                 <CollectionView x:Name="collectionView"

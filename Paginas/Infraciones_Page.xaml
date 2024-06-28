@@ -91,6 +91,7 @@
                     TextColor="Black"
                     IsEnabled="True"
                     FontSize="15" 
+                    MaxLength="12"
                     TextTransform="Uppercase"
                     PlaceholderColor="{StaticResource APDConLema5}"/>
  

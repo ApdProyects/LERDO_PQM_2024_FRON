@@ -69,7 +69,7 @@ public partial class Sincronizar_Page : ContentPage
                     }
                     else { ShowMessage.Alert("Sin acceso al servidor de datos"); }
                 }
-                else { ShowMessage.Alert("App sin acceso al servidor"); }
+                else { ShowMessage.Alert("Sin acceso a internet"); }
             }
             else { ShowMessage.Alert("No existen infracciones pendiente "); }
 
