@@ -20,7 +20,7 @@ public partial class Infraciones_Page : ContentPage
 
     private void ScrollView_Scrolled(object sender, ScrolledEventArgs e)
     {
-
+		
     }
 
 	private async void CargarData()

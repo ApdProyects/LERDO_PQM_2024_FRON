@@ -19,6 +19,7 @@ using System.Text;
 using static Android.Renderscripts.ScriptGroup;
 using Android.Health.Connect.DataTypes.Units;
 using AndroidX.Fragment.App.StrictMode;
+using InputKit.Shared.Controls;
 
 namespace Lerdo_MX_PQM.Paginas;
 
@@ -30,6 +31,8 @@ public partial class Login : ContentPage
     //private BluetoothPrinter Impresora;
     public bool InternetOn;
     public bool ServerOn;
+
+    List<ClsImpresoras> ListaImpresoras = new List<ClsImpresoras>();
 
     public Login()
     {
@@ -84,8 +87,8 @@ public partial class Login : ContentPage
 
         try
         {
-            List<ClsImpresoras> ListaImpresoras = await App.DataBase.GetItemsTable<ClsImpresoras>();    /*impresoras*/
-            CBImpresoras.ItemsSource = ListaImpresoras.Select(x => x.PIM_NOMBRE_IMPRESORA).ToList();
+            ListaImpresoras = await App.DataBase.GetItemsTable<ClsImpresoras>();    /*impresoras*/
+            //CBImpresoras.ItemsSource = ListaImpresoras.Select(x => x.PIM_NOMBRE_IMPRESORA).ToList();
         }
         catch (Exception ex)
         {
@@ -111,7 +114,21 @@ public partial class Login : ContentPage
         //btnPruebaImpresionIcono.Clicked += btnPrint_cliked;
         btnPruebaImpresion.Clicked += btnPrintClickNew;
         //btnPruebaImpresionIcono.Clicked += btnPrintClickNew;
+
+        txtUsuario.TextChanged += TxtUsuario_TextChanged;
+        txtContraseña.TextChanged += TxtContraseña_TextChanged;
     }
+
+    private void TxtContraseña_TextChanged(object? sender, Microsoft.Maui.Controls.TextChangedEventArgs e)
+    {
+        (sender as AdvancedEntry).Text = e.NewTextValue.ToUpperInvariant();
+    }
+
+    private void TxtUsuario_TextChanged(object? sender, Microsoft.Maui.Controls.TextChangedEventArgs e)
+    {
+        (sender as AdvancedEntry).Text = e.NewTextValue.ToUpperInvariant();
+    }
+
     /* carmagmos los catalogos */
     private async void CargarCatalogos()
     {
@@ -168,7 +185,7 @@ public partial class Login : ContentPage
                     try
                     {
                         List<ClsImpresoras> ListaImpresoras = await App.DataBase.GetItemsTable<ClsImpresoras>();    /*impresoras*/
-                        CBImpresoras.ItemsSource = ListaImpresoras.Select(x => x.PIM_NOMBRE_IMPRESORA).ToList();
+                        //CBImpresoras.ItemsSource = ListaImpresoras.Select(x => x.PIM_NOMBRE_IMPRESORA).ToList();
                     }
                     catch (Exception ex)
                     {
@@ -311,119 +328,129 @@ public partial class Login : ContentPage
     
     private async void btnPrintClickNew(object sender, EventArgs e)
     {
-        ShowMessage.ShowLoading();
+        string[] array = ListaImpresoras.Select(x=>x.PIM_NOMBRE_IMPRESORA).ToList().ToArray();
+        string impresora = await DisplayActionSheet("Selecciona una impresora", "Cancelar", null, array);
 
-        int item = -1;
-        bool selected = false;
 
-        try
+        if (string.IsNullOrEmpty(impresora) == false)
         {
-            item = CBImpresoras.SelectedIndex;
-            selected = true;
-        }
-        catch (Exception)
-        {
-            item = -1;
-            selected = false;
-        }
+            ShowMessage.ShowLoading();
 
-        if (selected == true && item >= 0)
-        {
-            try
-            {
-                BluetoothPrinter IMPRESORA_SELECIONADA = new BluetoothPrinter();
-                List<BluetoothPrinter> IMPRESORA_LIST = new List<BluetoothPrinter>();
-                IMPRESORA_SELECIONADA = new BluetoothPrinter();
-                List<ClsImpresoras> ListaImpresoras = await App.DataBase.GetItemsTable<ClsImpresoras>();    /*impresoras*/
-                IMPRESORA_SELECIONADA.PIM_MACADDRESS = ListaImpresoras.FirstOrDefault(x => x.PIM_NOMBRE_IMPRESORA.ToString() == CBImpresoras.SelectedItem.ToString()).PIM_MACADDRESS.ToString();
+            //int item = -1;
+            //bool selected = false;
+
+            //try
+            //{
+            //    item = CBImpresoras.SelectedIndex;
+            //    selected = true;
+            //}
+            //catch (Exception)
+            //{
+            //    item = -1;
+            //    selected = false;
+            //}
+
+            //if (selected == true && item >= 0)
+            //{
                 try
                 {
-                    IMPRESORA_LIST = await App.DataBase.GetItemsTable<BluetoothPrinter>();
-                    IMPRESORA_LIST = new List<BluetoothPrinter>();
-                    IMPRESORA_LIST.Add(IMPRESORA_SELECIONADA);
-                    App.DataBase.DropTable<BluetoothPrinter>();
-                    await App.DataBase.CreateTables<BluetoothPrinter>();
-                    await App.DataBase.InsertRangeItem<BluetoothPrinter>(IMPRESORA_LIST);
-                }
-                catch (Exception)
-                {
-                    IMPRESORA_LIST = new List<BluetoothPrinter>();
-                    IMPRESORA_LIST.Add(IMPRESORA_SELECIONADA);
-                    App.DataBase.DropTable<BluetoothPrinter>();
-                    await App.DataBase.CreateTables<BluetoothPrinter>();
-                    await App.DataBase.InsertRangeItem<BluetoothPrinter>(IMPRESORA_LIST);
-                }
-                var fileName = "";
-                webView.IsVisible = true;
-                string codebarras = _printerService.GenerateBarcodeBase64("APD030000000000000");
-
-                List<ClsEstructuratiket> estructuratikets = await App.DataBase.GetItemsTable<ClsEstructuratiket>();
-                string html = estructuratikets.First().tiket.ToString();
-                html = html.Replace("[logo_Base64]", LogoPNG.logoBase64.ToString());
-                html = html.Replace("[Fecha]", DateTime.Now.ToString("dd/MM/yyyy"));
-                html = html.Replace("[Hora]", DateTime.Now.ToString("t"));
-                html = html.Replace("[FOLIO]", "030000000000000");
-                html = html.Replace("[PROPIETARIO]", "A QUIEN CORRESPONDA");
-                html = html.Replace("[INSPECTOR]", "Testeo");
-                html = html.Replace("[INSPECTOR_APELLIDOS]", "");
-                html = html.Replace("[MARCA]", "TEST");
-                html = html.Replace("[LINEA]", "TEST");
-                html = html.Replace("[COLOR]", "TEST");
-                html = html.Replace("[PROCEDENCIA]", "TEST");
-                html = html.Replace("[LUGAR]", "TEST");
-                html = html.Replace("[GARANTIA]", "TEST");
-                html = html.Replace("[Num_PLACA]", "TEST");
-                html = html.Replace("[ESTADO]", "TEST");
-                html = html.Replace("[MOTIVO]", "TEST");
-                html = html.Replace("[IMPORTE]", "0.00");
-                html = html.Replace("[IMPORTE_EN_LETRA]", "");
-                html = html.Replace("[CODIGOBARRAS]", codebarras);
-
-                try
-                {
-                    webView.Source = new HtmlWebViewSource { Html = html };
-                    await Task.Delay(2000);
-                    var stream = await webView.CaptureAsync();
-                    using (var fileStream = new FileStream(Path.Combine(FileSystem.CacheDirectory, "screenshot.png"), FileMode.Create))
+                    BluetoothPrinter IMPRESORA_SELECIONADA = new BluetoothPrinter();
+                    List<BluetoothPrinter> IMPRESORA_LIST = new List<BluetoothPrinter>();
+                    IMPRESORA_SELECIONADA = new BluetoothPrinter();
+                    List<ClsImpresoras> ListaImpresoras = await App.DataBase.GetItemsTable<ClsImpresoras>();    /*impresoras*/
+                    IMPRESORA_SELECIONADA.PIM_MACADDRESS = ListaImpresoras.FirstOrDefault(x => x.PIM_NOMBRE_IMPRESORA.ToString() == impresora).PIM_MACADDRESS.ToString();
+                    try
                     {
-                        await stream.CopyToAsync(fileStream);
+                        IMPRESORA_LIST = await App.DataBase.GetItemsTable<BluetoothPrinter>();
+                        IMPRESORA_LIST = new List<BluetoothPrinter>();
+                        IMPRESORA_LIST.Add(IMPRESORA_SELECIONADA);
+                        App.DataBase.DropTable<BluetoothPrinter>();
+                        await App.DataBase.CreateTables<BluetoothPrinter>();
+                        await App.DataBase.InsertRangeItem<BluetoothPrinter>(IMPRESORA_LIST);
                     }
-                    fileName = Path.Combine(FileSystem.CacheDirectory, "screenshot.png");
-                    int wid = 380; //Convert.ToInt32(380);
-                    int hig = 1950;//Convert.ToInt32(1750);
-                    Connection connection = new BluetoothConnection(IMPRESORA_LIST.First().PIM_MACADDRESS.ToString());
-                    connection.Open();
-                    ZebraPrinter zebra = ZebraPrinterFactory.GetInstance(connection);
-                    int x = 0;
-                    int y = 50;
+                    catch (Exception)
+                    {
+                        IMPRESORA_LIST = new List<BluetoothPrinter>();
+                        IMPRESORA_LIST.Add(IMPRESORA_SELECIONADA);
+                        App.DataBase.DropTable<BluetoothPrinter>();
+                        await App.DataBase.CreateTables<BluetoothPrinter>();
+                        await App.DataBase.InsertRangeItem<BluetoothPrinter>(IMPRESORA_LIST);
+                    }
+                    var fileName = "";
+                scroll.IsVisible = true;
+                webView.IsVisible = true;
+                
+                    string codebarras = _printerService.GenerateBarcodeBase64("APD030000000000000");
 
-                    zebra.PrintImage(
-                        Path.GetFullPath(fileName),
-                        x, 
-                        y, 
-                        wid, 
-                        hig, 
-                        false);
+                    List<ClsEstructuratiket> estructuratikets = await App.DataBase.GetItemsTable<ClsEstructuratiket>();
+                    string html = estructuratikets.First().tiket.ToString();
+                    html = html.Replace("[logo_Base64]", LogoPNG.logoBase64.ToString());
+                    html = html.Replace("[Fecha]", DateTime.Now.ToString("dd/MM/yyyy"));
+                    html = html.Replace("[Hora]", DateTime.Now.ToString("t"));
+                    html = html.Replace("[FOLIO]", "030000000000000");
+                    html = html.Replace("[PROPIETARIO]", "A QUIEN CORRESPONDA");
+                    html = html.Replace("[INSPECTOR]", "Testeo");
+                    html = html.Replace("[INSPECTOR_APELLIDOS]", "");
+                    html = html.Replace("[MARCA]", "TEST");
+                    html = html.Replace("[LINEA]", "TEST");
+                    html = html.Replace("[COLOR]", "TEST");
+                    html = html.Replace("[PROCEDENCIA]", "TEST");
+                    html = html.Replace("[LUGAR]", "TEST");
+                    html = html.Replace("[GARANTIA]", "TEST");
+                    html = html.Replace("[Num_PLACA]", "TEST");
+                    html = html.Replace("[ESTADO]", "TEST");
+                    html = html.Replace("[MOTIVO]", "TEST");
+                    html = html.Replace("[IMPORTE]", "0.00");
+                    html = html.Replace("[IMPORTE_EN_LETRA]", "");
+                    html = html.Replace("[CODIGOBARRAS]", codebarras);
 
-                    connection.Close();
+                    try
+                    {
+                        webView.Source = new HtmlWebViewSource { Html = html };
+                        await Task.Delay(2000);
+                        var stream = await webView.CaptureAsync();
+                        using (var fileStream = new FileStream(Path.Combine(FileSystem.CacheDirectory, "screenshot.png"), FileMode.Create))
+                        {
+                            await stream.CopyToAsync(fileStream);
+                        }
+                        fileName = Path.Combine(FileSystem.CacheDirectory, "screenshot.png");
+                        int wid = 380; //Convert.ToInt32(380);
+                        int hig = 1950;//Convert.ToInt32(1750);
+                        Connection connection = new BluetoothConnection(IMPRESORA_LIST.First().PIM_MACADDRESS.ToString());
+                        connection.Open();
+                        ZebraPrinter zebra = ZebraPrinterFactory.GetInstance(connection);
+                        int x = 0;
+                        int y = 50;
+
+                        zebra.PrintImage(
+                            Path.GetFullPath(fileName),
+                            x,
+                            y,
+                            wid,
+                            hig,
+                            false);
+
+                        connection.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        DisplayAlert("Alerta", "IMPRESORA NO CONECTADA", "OK");
+                    }
+
+                    webView.IsVisible = false;
+                scroll.IsVisible = false;
                 }
                 catch (Exception ex)
                 {
-                    DisplayAlert("Alerta", "IMPRESORA NO CONECTADA", "OK");
+                    DisplayAlert("ALERTA", "PROBLEMAS AL GENERAR LA IMPRESION INTENTE MAS TARDE", "OK");
                 }
-
-                webView.IsVisible = false;
-            }
-            catch (Exception ex)
-            {
-                DisplayAlert("ALERTA", "PROBLEMAS AL GENERAR LA IMPRESION INTENTE MAS TARDE", "OK");
-            }
+            //}
+            //else
+            //{
+            //    DisplayAlert("ALERTA", "SELECCIONE UNA IMPRESORA", "OK"); ;
+            //}
+            ShowMessage.HideLoading(); 
         }
-        else
-        {
-            DisplayAlert("ALERTA", "SELECCIONE UNA IMPRESORA", "OK"); ;
-        }
-        ShowMessage.HideLoading();
     }
     private async void EliminarObsoletos()
     {

@@ -117,15 +117,15 @@ public partial class Menu_Page : ContentPage
             .OrderByDescending(i => i.PIF_INFRACCION_FECHA)
             .ToList();
 
-        lvlFolio1.Text = "FOLIO 1: " + ultimasInfracciones[0].PIF_FOLIO;
-        lvlPlaca1.Text = "PLACA 1: " + ultimasInfracciones[0].PIF_PLACAS;
-        lvlFolio2.Text = "FOLIO 2: " + ultimasInfracciones[1].PIF_FOLIO;
-        lvlPlaca2.Text = "PLACA 2: " + ultimasInfracciones[1].PIF_PLACAS;
-        lvlFolio3.Text = "FOLIO 3: " + ultimasInfracciones[2].PIF_FOLIO;
-        lvlPlaca3.Text = "PLACA 3: " + ultimasInfracciones[2].PIF_PLACAS;
-        lvlFolio4.Text = "FOLIO 4: " + ultimasInfracciones[3].PIF_FOLIO;
-        lvlPlaca4.Text = "PLACA 4: " + ultimasInfracciones[3].PIF_PLACAS;
-        lvlFolio5.Text = "FOLIO 5: " + ultimasInfracciones[4].PIF_FOLIO;
-        lvlPlaca5.Text = "PLACA 5: " + ultimasInfracciones[4].PIF_PLACAS;
+        lvlFolio1.Text = "FOLIO:   " + ultimasInfracciones[0].PIF_FOLIO;
+        lvlPlaca1.Text = "PLACA: " + ultimasInfracciones[0].PIF_PLACAS;
+        lvlFolio2.Text = "FOLIO:   " + ultimasInfracciones[1].PIF_FOLIO;
+        lvlPlaca2.Text = "PLACA: " + ultimasInfracciones[1].PIF_PLACAS;
+        lvlFolio3.Text = "FOLIO:   " + ultimasInfracciones[2].PIF_FOLIO;
+        lvlPlaca3.Text = "PLACA: " + ultimasInfracciones[2].PIF_PLACAS;
+        lvlFolio4.Text = "FOLIO:   " + ultimasInfracciones[3].PIF_FOLIO;
+        lvlPlaca4.Text = "PLACA: " + ultimasInfracciones[3].PIF_PLACAS;
+        lvlFolio5.Text = "FOLIO:   " + ultimasInfracciones[4].PIF_FOLIO;
+        lvlPlaca5.Text = "PLACA: " + ultimasInfracciones[4].PIF_PLACAS;
     }
 }

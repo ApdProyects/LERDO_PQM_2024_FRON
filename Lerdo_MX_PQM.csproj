@@ -81,9 +81,28 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="RN\**" />
+	  <Compile Remove="RN\**" />
+	  <EmbeddedResource Remove="RN\**" />
+	  <MauiCss Remove="RN\**" />
+	  <MauiXaml Remove="RN\**" />
+	  <None Remove="RN\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="Resources\Fonts\fontello.ttf" />
+	  <None Remove="Resources\Fonts\Inter-Black.ttf" />
+	  <None Remove="Resources\Fonts\Inter-Bold.ttf" />
+	  <None Remove="Resources\Fonts\Inter-ExtraBold.ttf" />
+	  <None Remove="Resources\Fonts\Inter-ExtraLight.ttf" />
+	  <None Remove="Resources\Fonts\Inter-Light.ttf" />
+	  <None Remove="Resources\Fonts\Inter-Medium.ttf" />
+	  <None Remove="Resources\Fonts\Inter-Regular.ttf" />
+	  <None Remove="Resources\Fonts\Inter-SemiBold.ttf" />
+	  <None Remove="Resources\Fonts\Inter-Thin.ttf" />
 	  <None Remove="Resources\Images\hanburguer.png" />
 	  <None Remove="Resources\Images\icon_img.png" />
+	  <None Remove="Resources\Images\icon_printer.png" />
 	  <None Remove="Resources\Splash\icon_splash.png" />
 	</ItemGroup>
 
@@ -95,9 +114,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="InputKit.Maui" Version="4.4.3" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Maui.Graphics" Version="8.0.61" />
 		<PackageReference Include="Mopups" Version="1.3.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SkiaSharp" Version="2.88.8" />
@@ -130,10 +151,6 @@
 	  <MauiXaml Update="Paginas\Sincronizar_Page.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="RN\" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">

@@ -24,111 +24,142 @@
             </Setter>
         </Style>
     </ContentPage.Resources>
-    <Grid Margin="10,-20,10,10" RowDefinitions=".1*,*,.1*,*">
-        <StackLayout Grid.Row="0">
-            <Label Text="APD PQM" FontSize="20" TextColor="Black" FontAttributes="Bold"></Label>
-            <Label Text="APD DESARROLLO MOVIL 2024" TextColor="DarkGray"/>
+    <Grid Margin="10,-20,10,10">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <StackLayout Grid.Row="0" Margin="0,5,0,0">
+            <Label Text="APD PQM" FontSize="20" TextColor="Black" FontFamily="Inter-Bold" HorizontalTextAlignment="Center"></Label>
+            <Label Text="APD DESARROLLO MOVIL 2024"  TextColor="Black" FontFamily="Inter-SemiBold" HorizontalTextAlignment="Center"/>
         </StackLayout>
 
 
-        <Grid Grid.Row="1" Margin="10,20,10,10">
-            <StackLayout>
+        <Grid Grid.Row="1" Margin="10,0,10,10">
+            <StackLayout VerticalOptions="Start">
                 <CollectionView x:Name="collectionView"
-                            x:FieldModifier="public"
-                            SelectionMode="Single">
+             x:FieldModifier="public"
+             SelectionMode="Single">
                     <CollectionView.ItemsSource>
                         <x:Array Type="{x:Type local:FlyoutPageItem}">
                             <local:FlyoutPageItem Title="INFRACCIONES"
-                                              TargetType="{x:Type local:Infraciones_Page}" />
+                               TargetType="{x:Type local:Infraciones_Page}" />
                             <local:FlyoutPageItem Title="REIMPRIMIR"
-                                              TargetType="{x:Type local:Reimpimir_page}" />
+                               TargetType="{x:Type local:Reimpimir_page}" />
                             <local:FlyoutPageItem Title="SINCRONIZAR INFRACCIONES"
-                                                  TargetType="{x:Type local:Sincronizar_Page}" />
+                                   TargetType="{x:Type local:Sincronizar_Page}" />
                         </x:Array>
                     </CollectionView.ItemsSource>
                     <CollectionView.ItemTemplate >
                         <DataTemplate>
-                            <Grid Padding="0,0,0,0">
-                                <Border 
-                                        BackgroundColor="{StaticResource APDConLema4}"
-                                        HeightRequest="45"
-                                        WidthRequest="300"
-                                        HorizontalOptions="CenterAndExpand"
-                                        >
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="7,7,7,7"></RoundRectangle>
-                                    </Border.StrokeShape>
-                                    <Label 
-                                           HorizontalTextAlignment="Center"
-                                           Text="{Binding Title}"
-                                           TextColor="{StaticResource White}"
-                                           FontSize="15"
-                                           FontAttributes="Bold"
-                                           VerticalOptions="Center" />
-                                </Border>
-                            </Grid>
+
+                            <Border 
+                         BackgroundColor="{StaticResource APDConLema4}"
+                         HeightRequest="45"
+                         WidthRequest="300"
+                         HorizontalOptions="CenterAndExpand"
+                         >
+                                <Border.StrokeShape>
+                                    <RoundRectangle ></RoundRectangle>
+                                </Border.StrokeShape>
+                                <Label 
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding Title}"
+                                    FontFamily="Inter-Regular"
+                            TextColor="{StaticResource White}"
+                            FontSize="15"
+                            FontAttributes="Bold"
+                            VerticalOptions="Center" />
+                            </Border>
+
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <!--<Grid Padding="5,1" BackgroundColor="{StaticResource White}">
-                    <Button x:Name="btnSinc" Clicked="btnSincronizar_click"
-                        FontSize="15"
-                        Text="SINCORNIZAR INFRACCIONES (0)"
-                        TextColor="{StaticResource White}"
-                        FontAttributes="Bold"
-                        HeightRequest="45"      
-                        WidthRequest="300"
-                        BackgroundColor="{StaticResource APDConLema4}"></Button>
-                </Grid>-->
-                <Grid Padding="5,1" BackgroundColor="{StaticResource White}">
-                    <Button  x:Name="btnSincCat" 
-                             Clicked="btnSincronizarCatalogos_click"
-                             FontSize="15"
-                             Text="SINCRONIZAR CATALOGOS"
-                             TextColor="{StaticResource White}"
-                             FontAttributes="Bold"
-                             HeightRequest="45"      
-                             WidthRequest="300"
-                             BackgroundColor="{StaticResource APDConLema4}"></Button>
-                </Grid>
-                <Grid Padding="5,1" BackgroundColor="{StaticResource White}">
-                    <Button  x:Name="btnSALIR" Clicked="btnSalir_cliked"
-                             FontAttributes="Bold"
-                             FontSize="15"
-                             Text="SALIR"
-                             TextColor="{StaticResource White}"
-                             HeightRequest="45"      
-                             WidthRequest="300"
-                             BackgroundColor="{StaticResource APDConLema4}"></Button>
-                </Grid>
+
             </StackLayout>
         </Grid>
 
-        <!--Ultimas actualizaciones-->
+
         <Grid Grid.Row="2" Margin="0,0,0,0" >
-            <StackLayout>
-                <Border HeightRequest="1"></Border>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.1*"/>
+                <RowDefinition Height="1.1*"/>
+                <RowDefinition Height="8.4*"/>
+            </Grid.RowDefinitions>
+
+            <!--<Border HeightRequest="1"></Border>-->
+            
+            <StackLayout Grid.Row="1">                
                 <Label Margin="10,10,10,10"
-                       Text="ULTIMAS INFRACCIÓNES:"
-                       FontSize="15"
+                       Text="ULTIMAS INFRACCIONES"
+                       FontSize="16"
+                       FontFamily="Inter-Bold"
                        HorizontalTextAlignment="Center"
-                       TextColor="DarkGray"></Label>
+                       TextColor="Black"></Label>
             </StackLayout>
+
+            <StackLayout Grid.Row="2">
+                <Label Margin="10,0,10,0"  FontFamily="Inter-Regular" FontAttributes="Bold" FontSize="14" Text="FOLIO: en proceso" x:Name="lvlFolio1" ></Label>
+                <Label Margin="10,0,10,15" FontFamily="Inter-Regular" FontAttributes="Bold" FontSize="14" Text="PLACA: en proceso" x:Name="lvlPlaca1" ></Label>
+                <Label Margin="10,0,10,0"  FontFamily="Inter-Regular" FontAttributes="Bold" FontSize="14" Text="FOLIO: en proceso" x:Name="lvlFolio2" ></Label>
+                <Label Margin="10,0,10,15" FontFamily="Inter-Regular" FontAttributes="Bold" FontSize="14" Text="PLACA: en proceso" x:Name="lvlPlaca2" ></Label>
+                <Label Margin="10,0,10,0"  FontFamily="Inter-Regular" FontAttributes="Bold" FontSize="14" Text="FOLIO: en proceso" x:Name="lvlFolio3" ></Label>
+                <Label Margin="10,0,10,15" FontFamily="Inter-Regular" FontAttributes="Bold" FontSize="14" Text="PLACA: en proceso" x:Name="lvlPlaca3" ></Label>
+                <Label Margin="10,0,10,0"  FontFamily="Inter-Regular" FontAttributes="Bold" FontSize="14" Text="FOLIO: en proceso" x:Name="lvlFolio4" ></Label>
+                <Label Margin="10,0,10,15" FontFamily="Inter-Regular" FontAttributes="Bold" FontSize="14" Text="PLACA: en proceso" x:Name="lvlPlaca4" ></Label>
+                <Label Margin="10,0,10,0"  FontFamily="Inter-Regular" FontAttributes="Bold" FontSize="14" Text="FOLIO: en proceso" x:Name="lvlFolio5" ></Label>
+                <Label Margin="10,0,10,0"  FontFamily="Inter-Regular" FontAttributes="Bold" FontSize="14" Text="PLACA: en proceso" x:Name="lvlPlaca5" ></Label>
+            </StackLayout>
+
         </Grid>
 
-        <Grid Grid.Row="3" Margin="0,10,0,0">
-            <StackLayout >
-                <Label Margin="10,0,10,0"  FontSize="15" Text="FOLIO: en proceso" x:Name="lvlFolio1" ></Label>
-                <Label Margin="10,0,10,10" FontSize="15" Text="PLACA: en proceso" x:Name="lvlPlaca1" ></Label>
-                <Label Margin="10,0,10,0"  FontSize="15" Text="FOLIO: en proceso" x:Name="lvlFolio2" ></Label>
-                <Label Margin="10,0,10,10" FontSize="15" Text="PLACA: en proceso" x:Name="lvlPlaca2" ></Label>
-                <Label Margin="10,0,10,0"  FontSize="15" Text="FOLIO: en proceso" x:Name="lvlFolio3" ></Label>
-                <Label Margin="10,0,10,10" FontSize="15" Text="PLACA: en proceso" x:Name="lvlPlaca3" ></Label>
-                <Label Margin="10,0,10,0"  FontSize="15" Text="FOLIO: en proceso" x:Name="lvlFolio4" ></Label>
-                <Label Margin="10,0,10,10" FontSize="15" Text="PLACA: en proceso" x:Name="lvlPlaca4" ></Label>
-                <Label Margin="10,0,10,0"  FontSize="15" Text="FOLIO: en proceso" x:Name="lvlFolio5" ></Label>
-                <Label Margin="10,0,10,0"  FontSize="15" Text="PLACA: en proceso" x:Name="lvlPlaca5" ></Label>
-            </StackLayout>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
+
+            <Button
+                Grid.Row="0" 
+                IsVisible="False"
+                x:Name="btnSincCat" 
+                Clicked="btnSincronizarCatalogos_click"
+                FontSize="15"
+                Margin="0,1.5,0,0"
+                Text="SINCRONIZAR CATALOGOS"
+                TextColor="{StaticResource White}"
+                FontAttributes="Bold"
+                HeightRequest="45"      
+                WidthRequest="280"
+                BackgroundColor="{StaticResource APDConLema4}"/>
+
+            <Button
+                Grid.Row="1" 
+                x:Name="btnSALIR" 
+                Clicked="btnSalir_cliked"
+                FontAttributes="Bold"
+                Margin="0,3,0,0"
+                FontSize="15"
+                Text="SALIR"
+                TextColor="{StaticResource White}"
+                HeightRequest="45"      
+                WidthRequest="280"
+                BackgroundColor="{StaticResource APDConLema4}"/>
         </Grid>
+
+
     </Grid>
 </ContentPage>
