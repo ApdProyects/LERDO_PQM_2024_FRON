@@ -103,6 +103,8 @@
 	  <None Remove="Resources\Images\hanburguer.png" />
 	  <None Remove="Resources\Images\icon_img.png" />
 	  <None Remove="Resources\Images\icon_printer.png" />
+	  <None Remove="Resources\Images\icon_save.png" />
+	  <None Remove="Resources\Images\loading.gif" />
 	  <None Remove="Resources\Splash\icon_splash.png" />
 	</ItemGroup>
 
@@ -149,6 +151,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Paginas\Sincronizar_Page.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Paginas\viewPruebaas.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

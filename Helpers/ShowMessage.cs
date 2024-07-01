@@ -14,6 +14,17 @@ namespace Lerdo_MX_PQM.Helpers
         {
             await App.Current.MainPage.DisplayAlert("Información", Mensaje, "OK");
         }
+
+        public async static Task ShowLoading_2()
+        {
+            await loadingPage.PushAsync(App.PopupPageLoading);
+        }
+        public async static Task HideLoading_2()
+        {
+            await loadingPage.RemovePageAsync(App.PopupPageLoading);
+        }
+
+
         public async static Task ShowLoading()
         {
             await loadingPage.PushAsync(App.PopupPage);

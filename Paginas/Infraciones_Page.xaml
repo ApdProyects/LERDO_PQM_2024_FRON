@@ -5,7 +5,8 @@
              xmlns:input="clr-namespace:InputKit.Shared.Controls;assembly=InputKit.Maui"
              Title="INFRACCIONES"
              BackgroundColor="White">
-    <ScrollView>
+    
+    <ScrollView x:Name="scrollApd">
         <Grid Margin="30,10,30,10">
 
 
@@ -29,6 +30,7 @@
                     Margin="5,0,0,0"
                    TextColor="{StaticResource APDConLema5}"/>
                 <Editor 
+                    Margin="0,0,40,0"
                 x:Name="txtFolio" 
                 Placeholder="folio:"
                 Text="03"
@@ -40,12 +42,14 @@
                 PlaceholderColor="{StaticResource APDConLema5}"/>
                 <!-- Inspector -->
                 <Label 
+                    Margin="5,10,0,0"
                 FontSize="15" 
                 Text="INSPECTOR:" TextColor="{StaticResource APDConLema5}"
                 FontAttributes="Bold"
                 FontFamily="Inter-Bold"
-                    Margin="5,0,0,0"/>
-                <Editor 
+                    />
+                <Editor
+                    Margin="0,0,40,0"
                 x:Name="txtInspector" 
                 Text="NombreUsuario"
                 FontAttributes="Bold"
@@ -55,7 +59,7 @@
                 FontSize="15" 
                 PlaceholderColor="{StaticResource APDConLema5}"/>
 
-                <Grid>
+                <Grid Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10*"/>
                     </Grid.ColumnDefinitions>
@@ -72,9 +76,10 @@
                        TextColor="{StaticResource APDConLema5}"
                            Margin="5,0,0,0"/>
                     <Picker Grid.Row="1"
+                            Margin="0,0,40,0"
                         x:Name="CBImpresoras" 
                         FontSize="15" 
-                        Title="SELECCIONE"
+                        Title=""
                         FontAttributes="Bold"
                     FontFamily="Inter-Regular"
                         TitleColor="LightSlateGray"
@@ -91,10 +96,11 @@
                 <StackLayout Orientation="Vertical">
                     <!-- Marca Vehiculo-->
                     <Label FontSize="14" Text="MARCA VEHÍCULO:" TextColor="{StaticResource APDConLema5}" FontAttributes="Bold"
-                           Margin="5,0,0,0"
+                           Margin="5,10,0,0"
                 FontFamily="Inter-Bold"/>
                     <Picker x:Name="CBMARCA"
-                        Title="SELECCIONE" 
+                            Margin="0,0,40,0"
+                        Title="" 
                         TitleColor="LightSlateGray" 
                         FontAttributes="Bold"
                         FontFamily="Inter-Regular"
@@ -106,9 +112,10 @@
                     <Label FontSize="14" Text="LÍNEA VEHÍCULOS" TextColor="{StaticResource APDConLema5}"
                          FontAttributes="Bold"
                         FontFamily="Inter-Bold"
-                           Margin="5,0,0,0"/>
+                           Margin="5,10,0,0"/>
                     <Picker x:Name="CBLINEA" 
-                        Title="SELECCIONE" 
+                        Title="" 
+                            Margin="0,0,40,0"
                         TitleColor="LightSlateGray"
                         FontAttributes="Bold"
                         FontFamily="Inter-Regular"
@@ -118,9 +125,10 @@
                     <Label  FontSize="14" Text="COLOR VEHÍCULO:" TextColor="{StaticResource APDConLema5}"
                         FontAttributes="Bold"
                         FontFamily="Inter-Bold"
-                            Margin="5,0,0,0"/>
+                            Margin="5,10,0,0"/>
                     <Picker x:Name="CBCOLOR" 
-                        Title="SELECCIONE"
+                        Title=""
+                            Margin="0,0,40,0"
                         TitleColor="LightSlateGray"
                         FontAttributes="Bold"
                         FontFamily="Inter-Regular"
@@ -130,9 +138,10 @@
                     <Label  FontSize="14" Text="PROCEDENCIA:" TextColor="{StaticResource APDConLema5}"
                        FontAttributes="Bold"
                         FontFamily="Inter-Bold"
-                            Margin="5,0,0,0"/>
+                            Margin="5,10,0,0"/>
                     <Picker x:Name="CBPROCEDENCIA" 
-                        Title="SELECCIONE" 
+                        Title="" 
+                            Margin="0,0,40,0"
                         TitleColor="LightSlateGray"
                          FontAttributes="Bold"
                          FontFamily="Inter-Regular"
@@ -142,9 +151,10 @@
                     <Label  FontSize="14" Text="LUGAR:" TextColor="{StaticResource APDConLema5}"
                        FontAttributes="Bold"
                         FontFamily="Inter-Bold"
-                            Margin="5,0,0,0"/>
+                            Margin="5,10,0,0"/>
                     <Picker x:Name="CBLUGAR" 
-                        Title="SELECCIONE" 
+                        Title="" 
+                            Margin="0,0,40,0"
                         TitleColor="LightSlateGray"
                         FontAttributes="Bold"
                         FontFamily="Inter-Regular"
@@ -154,22 +164,24 @@
                     <Label  FontSize="14" Text="GARANTÍA:" TextColor="{StaticResource APDConLema5}"
                        FontAttributes="Bold"
                         FontFamily="Inter-Bold"
-                            Margin="5,0,0,0"/>
+                            Margin="5,10,0,0"/>
                     <Picker x:Name="CBGARANTIA" 
-                        Title="SELECCIONE" 
+                        Title="" 
                         TitleColor="LightSlateGray" 
                         FontAttributes="Bold"
                         FontFamily="Inter-Regular"
+                            Margin="0,0,40,0"
                         FontSize="15"></Picker>
 
                     <!-- No Placa -->
                     <Label  FontSize="14" Text="N#. PLACA:" TextColor="{StaticResource APDConLema5}"
                        FontAttributes="Bold"
                         FontFamily="Inter-Bold"
-                            Margin="5,0,0,0"/>
-                    <Editor 
+                            Margin="5,10,0,0"/>
+                    <Entry 
                     x:Name="txtNoPlaca" 
                     Text=""
+                        Margin="0,0,40,0"
                     TextColor="Black"
                     IsEnabled="True"
                     MaxLength="12"
@@ -177,25 +189,27 @@
                     FontAttributes="Bold"
                     FontFamily="Inter-Regular"
                     FontSize="15"
-                    PlaceholderColor="{StaticResource APDConLema5}"/>
+                    PlaceholderColor="LightSlateGray"/>
 
                     <!-- Estado Placas:: -->
                     <Label  FontSize="14" Text="ESTADO PLACAS:" TextColor="{StaticResource APDConLema5}"
                        FontAttributes="Bold"
                         FontFamily="Inter-Bold"
-                            Margin="5,0,0,0"/>
-                    <Picker x:Name="CBEDOPLACA" Title="SELECCIONE" TitleColor="LightSlateGray"
+                            Margin="5,10,0,0"/>
+                    <Picker x:Name="CBEDOPLACA" Title="" TitleColor="LightSlateGray"
                         FontAttributes="Bold"
+                            Margin="0,0,40,0"
                     FontFamily="Inter-Regular"
                     FontSize="15"></Picker>
 
                     <!-- Motivo: -->
                     <Label FontSize="14" Text="MOTIVO:" TextColor="{StaticResource APDConLema5}"
                        FontAttributes="Bold"
-                           Margin="5,0,0,0"
+                           Margin="5,10,0,0"
                     FontFamily="Inter-Bold"/>
-                    <Picker x:Name="CBMOTIVO" Title="SELECCIONE" TitleColor="LightSlateGray"
+                    <Picker x:Name="CBMOTIVO" Title="" TitleColor="LightSlateGray"
                             FontAttributes="Bold"
+                            Margin="0,0,40,0"
                     FontFamily="Inter-Regular"
                     FontSize="15"></Picker>
 
@@ -204,45 +218,74 @@
             <!--</ScrollView>-->
 
             <StackLayout Grid.Row="2" Margin="0,30,0,0" VerticalOptions="Start" Orientation="Vertical">
-                <Grid RowDefinitions="25,40,20"
-                HorizontalOptions="Fill" >
+                
+                
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
                     <Border 
                     Grid.Row="0"
-                    HorizontalOptions="Fill" 
+                    HorizontalOptions="Fill"                         
                     BackgroundColor="{StaticResource APDConLema5}">
-                        <Grid ColumnDefinitions=".7*,.3*">
-                            <Label Grid.Column="0" HorizontalOptions="Center" VerticalTextAlignment="Center" FontFamily="Inter-Bold" FontSize="Subtitle"  Text="DESCRIPCIÓN" TextColor="{StaticResource APDConLema1}" ></Label>
-                            <Label Grid.Column="1" HorizontalOptions="Center" VerticalTextAlignment="Center" FontFamily="Inter-Bold" FontSize="Subtitle"  Text="IMPORTE" TextColor="{StaticResource APDConLema1}"></Label>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5,5,5,5"></RoundRectangle>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions=".7*,.3*" Margin="5">
+                            <Label Grid.Column="0" HorizontalOptions="Start" VerticalTextAlignment="Center" 
+                                   FontFamily="Inter-Bold" FontSize="Subtitle"  Text=" DESCRIPCIÓN" TextColor="{StaticResource APDConLema1}" ></Label>
+                            <Label Grid.Column="1" HorizontalOptions="Center" VerticalTextAlignment="Center" 
+                                   FontFamily="Inter-Bold" FontSize="Subtitle"  Text="IMPORTE" TextColor="{StaticResource APDConLema1}"></Label>
                         </Grid>
                     </Border>
-                    <Border Grid.Row="1" VerticalOptions="Start" HeightRequest="3" ></Border>
                     <Grid Grid.Row="1" ColumnDefinitions=".7*,.3*" >
                         <Label Grid.Column="0" 
                        HorizontalOptions="Center" 
                        VerticalTextAlignment="Center" 
                        FontSize="12" 
-                       FontFamily="Inter-Regular"
+                       FontFamily="Inter-SemiBold"
                        Text="Art. 31 REGLAMENTO DE ESTACIONÓMETROS EN LA VÍA PÚBLICA" 
-                       TextColor="{StaticResource APDConLema4}"></Label>
-                        <Label Grid.Column="1" x:Name="lbl1Monto" HorizontalOptions="Center" VerticalTextAlignment="Center"  Text="$0" TextColor="{StaticResource AzulAPD}"></Label>
+                       TextColor="{StaticResource APDConLema4}" Margin="7,0,30,0"></Label>
+                        <Label Grid.Column="1" x:Name="lbl1Monto" HorizontalOptions="Center" FontFamily="Inter-SemiBold" VerticalTextAlignment="Center"  
+                               Text="$0" TextColor="{StaticResource AzulAPD}"></Label>
                     </Grid>
-                    <Border Grid.Row="2" VerticalOptions="Start" HeightRequest="3"></Border>
-                    <Grid Grid.Row="2" ColumnDefinitions=".7*,.3*">
-                        <Label Grid.Column="0" HorizontalOptions="Center" VerticalTextAlignment="Center" Text="IMPORTE TOTAL" TextColor="{StaticResource APDConLema4}" ></Label>
-                        <Label Grid.Column="1" x:Name="lbl2Monto" HorizontalOptions="Center" VerticalTextAlignment="Center" Text="$0" TextColor="{StaticResource AzulAPD}"></Label>
+                    <Border Grid.Row="2" VerticalOptions="Start" HeightRequest="3" BackgroundColor="Black" Margin="0,2,0,0"></Border>
+                    <Grid Grid.Row="2" ColumnDefinitions=".7*,.3*" Margin="0,10,0,0">
+                        <Label Grid.Column="0" HorizontalOptions="End" VerticalTextAlignment="Center" Text="TOTAL:"  FontFamily="Inter-Bold"
+                               TextColor="{StaticResource APDConLema4}" ></Label>
+                        <Label Grid.Column="1" x:Name="lbl2Monto" HorizontalOptions="Center" VerticalTextAlignment="Center"  FontFamily="Inter-Bold"
+                               Text="$0" TextColor="{StaticResource AzulAPD}"></Label>
                     </Grid>
+
+
+                    <Button
+                        Grid.Row="3"
+                         Margin="0,40,0,20"
+                         x:Name="btnGuardar"
+                         Clicked="btnGuardar_Clicked"
+                         FontSize="16"
+                         Text="GUARDAR INFRACCIÓN"
+                             FontFamily="Inter-SemiBold"
+                             FontAttributes="Bold"
+                         ImageSource="icon_save.png"
+                         TextColor="{StaticResource White}"
+                         Background="{StaticResource APDConLema4}"
+                         BorderColor="{StaticResource APDConLema3}"
+                         BorderWidth="1"
+                         VerticalOptions="Center"></Button>
+
                 </Grid>
-                <Button
-                Margin="20"
-                x:Name="btnGuardar"
-                Clicked="btnGuardar_Clicked"
-                FontSize="15"
-                Text="GUARDAR INFRACCION"
-                TextColor="{StaticResource White}"
-                Background="{StaticResource APDConLema4}"
-                BorderColor="{StaticResource APDConLema3}"
-                BorderWidth="1"
-                VerticalOptions="Center"></Button>
+                
+                
+               
             </StackLayout>
 
 

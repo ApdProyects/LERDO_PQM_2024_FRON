@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lerdo_MX_PQM.Paginas.viewPruebaas"
+             Title="viewPruebaas">
+    <VerticalStackLayout>
+        <Button VerticalOptions="Center" 
+            Text="Cickme"
+                Clicked="Button_Clicked"
+            HorizontalOptions="Center" />
+        <Entry Placeholder="fdsafs"></Entry>
+        <Entry Placeholder="fdsafs"></Entry>
+        <Entry Placeholder="fdsafs"></Entry>
+        <Entry Placeholder="fdsafs"></Entry>
+        <Entry Placeholder="fdsafs"></Entry>
+        <Entry Placeholder="fdsafs"></Entry>
+        <Entry Placeholder="fdsafs"></Entry>
+        <Entry Placeholder="fdsafs"></Entry>
+    </VerticalStackLayout>
+</ContentPage>

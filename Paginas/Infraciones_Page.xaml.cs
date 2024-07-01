@@ -1,6 +1,9 @@
+using Android.AccessibilityServices;
+using Android.InputMethodServices;
 using Android.Text;
 using Lerdo_MX_PQM.Helpers;
 using Lerdo_MX_PQM.Modelos;
+using Microsoft.Maui.Platform;
 using System.Collections.Generic;
 using Zebra.Sdk.Comm;
 using Zebra.Sdk.Printer;
@@ -16,6 +19,34 @@ public partial class Infraciones_Page : ContentPage
 		InitializeComponent();
 		CargarData();
         _printerService = new ZebraPrinterService(); /* inizializamos la clase de print */
+
+
+        CBLUGAR.Focused += CBLUGAR_Focused;
+        txtNoPlaca.Focused += TxtNoPlaca_Focused;
+    }
+
+    private async void CBLUGAR_Focused(object? sender, FocusEventArgs e)
+    {
+        await ScrollUpPicker(sender);
+    }
+
+    private async void TxtNoPlaca_Focused(object? sender, FocusEventArgs e)
+    {
+		await ScrollUpEdit(sender);
+    }
+
+    private async Task ScrollUpPicker(object? sender)
+    {
+        Picker edt = (Picker)sender;
+        double y = edt.Y + 25;
+        await scrollApd.ScrollToAsync(0, y, true);
+    }
+
+    private async Task ScrollUpEdit(object? sender)
+	{
+        Entry edt = (Entry)sender;
+        double y = edt.Y + 50;
+        await scrollApd.ScrollToAsync(0, y, true);
     }
 
     private void ScrollView_Scrolled(object sender, ScrolledEventArgs e)
