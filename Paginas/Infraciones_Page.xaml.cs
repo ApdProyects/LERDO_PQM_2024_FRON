@@ -19,6 +19,24 @@ public partial class Infraciones_Page : ContentPage
 	public static string macsel = "";
     public static string file = "";
 
+    List<clsMarcas> ListaMarcas = new List<clsMarcas>();
+
+    List<clsLineas> ListaLineas = new List<clsLineas>();
+
+    List<clsColores> ListaColores = new List<clsColores>();
+
+    List<clsProcedencia> ListaProcedencia = new List<clsProcedencia>();
+
+    List<clsLugares> ListaLugares = new List<clsLugares>();
+
+    List<clsGarantias> ListaGarantias = new List<clsGarantias>();
+
+    List<clsEstados> ListaEstados = new List<clsEstados>();
+
+    List<clsMotivos> ListaMotivos = new List<clsMotivos>();
+
+    List<MontoInfraccion> Montos = new List<MontoInfraccion>();
+
     public Infraciones_Page()
 	{   
 		InitializeComponent();
@@ -81,15 +99,16 @@ public partial class Infraciones_Page : ContentPage
 			txtInspector.Text = UsuarioLogin.First().PIN_NOMBRE; // UsuarioLogin.FirstOrDefault(x => x.User_act == true).PIN_NOMBRE;    /* NOMBRE DE INSPECTOR		*/
 			string folio = "030092" + PIN_CLAVE.ToString("D3") + PIN_FOLIO.ToString("D5");			/* Construccion de Folio	*/
 			txtFolio.Text = folio;
-			List<clsMarcas>		ListaMarcas		= await App.DataBase.GetItemsTable<clsMarcas>();    /*marcas*/
-			List<clsLineas>		ListaLineas		= await App.DataBase.GetItemsTable<clsLineas>();    /**/
-			List<clsColores>	ListaColores	= await App.DataBase.GetItemsTable<clsColores>();	/**/
-			List<clsProcedencia>ListaProcedencia = await App.DataBase.GetItemsTable<clsProcedencia>();	
-			List<clsLugares>	ListaLugares	= await App.DataBase.GetItemsTable<clsLugares>();	/**/
-			List<clsGarantias>	ListaGarantias	= await App.DataBase.GetItemsTable<clsGarantias>();	/**/
-            List<clsEstados>	ListaEstados	= await App.DataBase.GetItemsTable<clsEstados>();
-			List<clsMotivos>	ListaMotivos	= await App.DataBase.GetItemsTable< clsMotivos>();
-			List<MontoInfraccion> Montos		= await App.DataBase.GetItemsTable< MontoInfraccion>();
+
+            ListaMarcas = await App.DataBase.GetItemsTable<clsMarcas>();    /*marcas*/
+            ListaLineas = await App.DataBase.GetItemsTable<clsLineas>();    /**/
+            ListaColores = await App.DataBase.GetItemsTable<clsColores>();  /**/
+            ListaProcedencia = await App.DataBase.GetItemsTable<clsProcedencia>();
+            ListaLugares = await App.DataBase.GetItemsTable<clsLugares>();  /**/
+            ListaGarantias = await App.DataBase.GetItemsTable<clsGarantias>();  /**/
+            ListaEstados = await App.DataBase.GetItemsTable<clsEstados>();
+            ListaMotivos = await App.DataBase.GetItemsTable<clsMotivos>();
+            Montos = await App.DataBase.GetItemsTable<MontoInfraccion>();
 
             /* FALTA DEFINIR MOTIVO */
             CBMARCA.ItemsSource = ListaMarcas.Select(x => x.PVM_NOMBRE).ToList();
@@ -168,16 +187,16 @@ public partial class Infraciones_Page : ContentPage
 			checkServer = false;
 		clsCatalogos catalogos = new clsCatalogos(); 
 
-        List<InspectorLogin> UsuarioLogin; /*tengo a el usuario logeadeo */
-		List<clsMarcas> ListaMarcas;
-		List<clsLineas> ListaLineas;
-		List<clsColores> ListaColores;
-		List<clsProcedencia> ListaProcedencia;
-        List<clsLugares> ListaLugares;
-        List<clsGarantias> ListaGarantias;
-        List<clsEstados> ListaEstados;
-        List<clsMotivos> ListaMotivos;
-        List<MontoInfraccion> Montos;
+      List<InspectorLogin> UsuarioLogin; /*tengo a el usuario logeadeo */
+		//List<clsMarcas> ListaMarcas;
+		//List<clsLineas> ListaLineas;
+		//List<clsColores> ListaColores;
+		//List<clsProcedencia> ListaProcedencia;
+  //      List<clsLugares> ListaLugares;
+  //      List<clsGarantias> ListaGarantias;
+  //      List<clsEstados> ListaEstados;
+  //      List<clsMotivos> ListaMotivos;
+  //      List<MontoInfraccion> Montos;
 
 		Infracciones multa;
 		List<Infracciones> Listamultas;
@@ -204,15 +223,15 @@ public partial class Infraciones_Page : ContentPage
 				//ShowMessage.ShowLoading_2();
 				#region cargamos data
 				UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
-				ListaMarcas = await App.DataBase.GetItemsTable<clsMarcas>();			
-				ListaLineas = await App.DataBase.GetItemsTable<clsLineas>();			
-				ListaColores = await App.DataBase.GetItemsTable<clsColores>();			
-				ListaProcedencia = await App.DataBase.GetItemsTable<clsProcedencia>();
-				ListaLugares = await App.DataBase.GetItemsTable<clsLugares>(); 
-				ListaGarantias = await App.DataBase.GetItemsTable<clsGarantias>();	
-				ListaEstados = await App.DataBase.GetItemsTable<clsEstados>();
-				ListaMotivos = await App.DataBase.GetItemsTable<clsMotivos>();
-				Montos = await App.DataBase.GetItemsTable<MontoInfraccion>();
+				//ListaMarcas = await App.DataBase.GetItemsTable<clsMarcas>();			
+				//ListaLineas = await App.DataBase.GetItemsTable<clsLineas>();			
+				//ListaColores = await App.DataBase.GetItemsTable<clsColores>();			
+				//ListaProcedencia = await App.DataBase.GetItemsTable<clsProcedencia>();
+				//ListaLugares = await App.DataBase.GetItemsTable<clsLugares>(); 
+				//ListaGarantias = await App.DataBase.GetItemsTable<clsGarantias>();	
+				//ListaEstados = await App.DataBase.GetItemsTable<clsEstados>();
+				//ListaMotivos = await App.DataBase.GetItemsTable<clsMotivos>();
+				//Montos = await App.DataBase.GetItemsTable<MontoInfraccion>();
 
 				/*asiganmos valores*/
 				int PIN_CLAVE = UsuarioLogin.First().PIN_CLAVE;
@@ -312,7 +331,7 @@ public partial class Infraciones_Page : ContentPage
                                         }
                                         /*	ACTUALIZAMOS EL FOLIO DE LOS INSPECTORES	*/
                                     }
-                                    catch (Exception)
+                                    catch (Exception ex)
 									{
 
                                         ActUltimoFoli = false;

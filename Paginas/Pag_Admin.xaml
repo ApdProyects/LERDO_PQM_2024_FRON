@@ -13,6 +13,7 @@
                Placeholder="NUEVA DIRECCION" 
                FontSize="15"
                TextColor="Black"
+               Text="http://148.230.154.229:80/api/"
                PlaceholderColor="Gray"
                BackgroundColor="{StaticResource Gray100}"/>
         <Button Margin="10,10,10,10"

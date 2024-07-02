@@ -11,6 +11,7 @@
             Clicked="BtnSincronizar_Clicked"
             FontSize="15"
             Text="SINCRONIZAR INFRACCIONES"
+            FontFamily="Inter-SemiBold"
             TextColor="{StaticResource White}"
             Background="{StaticResource APDConLema4}"
             BorderColor="{StaticResource APDConLema3}"
@@ -24,20 +25,20 @@
                     <DataTemplate>
                         <ViewCell>
                             <Grid ColumnDefinitions=".6*, .4*" RowDefinitions="auto, auto">
-                                <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal" HorizontalOptions="Center">
-                                    <Label Text="FOLIO:" HorizontalTextAlignment="End"></Label>
-                                    <Label Text="{Binding PIF_FOLIO}" FontAttributes="Bold"></Label>
+                                <StackLayout Grid.Row="0" Grid.Column="0"  Orientation="Horizontal" HorizontalOptions="Center">
+                                    <Label Text="FOLIO:" FontFamily="Inter-SemiBold"></Label>
+                                    <Label Text="{Binding PIF_FOLIO}" FontFamily="Inter-Regular" FontAttributes="Bold"></Label>
                                 </StackLayout>
                                 <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalOptions="Center">
-                                    <Label Text="PLACA: "></Label>
-                                    <Label Text="{Binding PIF_PLACAS}" FontAttributes="Bold"></Label>
+                                    <Label Text="PLACA: " FontFamily="Inter-SemiBold"></Label>
+                                    <Label Text="{Binding PIF_PLACAS}" FontAttributes="Bold" FontFamily="Inter-Regular"></Label>
                                 </StackLayout>
                                 <StackLayout Grid.Row="1" Grid.Column="0"  Orientation="Horizontal" HorizontalOptions="Center">
-                                    <Label Text="FECHA: "></Label>
-                                    <Label Text="{Binding Fecha_hora_Infraccion, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontAttributes="Bold"></Label>
+                                    <Label Text="FECHA:" FontFamily="Inter-SemiBold" Margin="5,0,0,0"></Label>
+                                    <Label Text="{Binding Fecha_hora_Infraccion, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontFamily="Inter-Regular" FontAttributes="Bold"></Label>
                                 </StackLayout>
                                 <StackLayout Grid.Row="1" Grid.Column="1"  Orientation="Horizontal" HorizontalOptions="Center">
-                                    <Label Text="ENVIADO: "></Label>
+                                    <Label Text="ENVIADO: " FontFamily="Inter-SemiBold"></Label>
                                     <Border BackgroundColor="RED"
                                         HeightRequest="20"
                                         HorizontalOptions="Start"
