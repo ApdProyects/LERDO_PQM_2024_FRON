@@ -406,8 +406,8 @@ public partial class Infraciones_Page : ContentPage
 									multa.Det_Sync = true;
 									Lista_multas_para_actualizar.Add(multa);
 									App.DataBase.DropTable<Infracciones>();
-									await App.DataBase.CreateTables<Infracciones>();
-									await App.DataBase.InsertRangeItem<Infracciones>(Lista_multas_para_actualizar);
+									App.DataBase.CreateTables<Infracciones>();
+									App.DataBase.InsertRangeItem<Infracciones>(Lista_multas_para_actualizar);
 								}
 								//ShowMessage.HideLoading_2();
 							}

@@ -133,7 +133,7 @@ public partial class Reimpimir_page : ContentPage
         {
             listaInfracciones = await App.DataBase.GetItemsTable<Infracciones>();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             listaInfracciones = new List<Infracciones>();
         }

@@ -498,8 +498,8 @@ public partial class Login : ContentPage
             if (Longitud > Allinfracciones.Count())
             {
                 App.DataBase.DropTable<Infracciones>();
-                await App.DataBase.CreateTables<Infracciones>();
-                await App.DataBase.InsertRangeItem<Infracciones>(Allinfracciones);
+                App.DataBase.CreateTables<Infracciones>();
+                App.DataBase.InsertRangeItem<Infracciones>(Allinfracciones);
             }
         }
         catch (Exception ex)
