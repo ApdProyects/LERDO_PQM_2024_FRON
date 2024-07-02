@@ -47,6 +47,17 @@ public partial class Login : ContentPage
         _printerService = new ZebraPrinterService(); /* inizializamos la clase de print */
 
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        await Task.Delay(100);
+        imgGif.IsAnimationPlaying = false;
+        await Task.Delay(100);
+        imgGif.IsAnimationPlaying = true;
+    }
+
     /*  */
     private async void Inspectorlog()
 	{
@@ -54,8 +65,10 @@ public partial class Login : ContentPage
         List<Infracciones> listaInfraccion = new List<Infracciones>();
         try
         {
-            gridLoadingBox.BackgroundColor =Color.FromHex("#30236d");
-            lblCarga.Text = "Verificando Usuario....";
+            gridLoadingBox.IsVisible = true;
+            //gridLoadingBox.BackgroundColor =Color.FromHex("#30236d");
+            //lblCarga.Text = "Verificando Usuario....";
+
             ////ShowMessage.ShowLoadingUser();
             //await Task.Delay(1000);
             try
@@ -148,9 +161,9 @@ public partial class Login : ContentPage
         
         try
         {
-
-            gridLoadingBox.BackgroundColor = Color.FromHex("#30236d");
-            lblCarga.Text = "Verificando Servidor....";
+            gridLoadingBox.IsVisible = true;
+            //gridLoadingBox.BackgroundColor = Color.FromHex("#30236d");
+            //lblCarga.Text = "Verificando Servidor....";
             CheckInternet = await catalogos.ChackInternet();
         }
         catch (Exception)
@@ -162,8 +175,9 @@ public partial class Login : ContentPage
         {
             try
             {
-                gridLoadingBox.BackgroundColor = Color.FromHex("#ed078b");
-                lblCarga.Text = "Verificando Servidor....";
+                gridLoadingBox.IsVisible = true;
+                //gridLoadingBox.BackgroundColor = Color.FromHex("#ed078b");
+                //lblCarga.Text = "Verificando Servidor....";
                 CheckServer = await catalogos.ChackServer();
             }
             catch (Exception)
@@ -176,8 +190,9 @@ public partial class Login : ContentPage
         {
             try
             {
-                gridLoadingBox.BackgroundColor = Color.FromHex("#0d62d9");
-                lblCarga.Text = "Cargando Catalogos ....";
+                gridLoadingBox.IsVisible = true;
+                //gridLoadingBox.BackgroundColor = Color.FromHex("#0d62d9");
+                //lblCarga.Text = "Cargando Catalogos ....";
 
                 string res_sinc = await catalogos.CargarCatalogos();
                 if (res_sinc == "1")

@@ -1,5 +1,6 @@
 using Android.AccessibilityServices;
 using Android.InputMethodServices;
+using Android.Renderscripts;
 using Android.Text;
 using Lerdo_MX_PQM.Helpers;
 using Lerdo_MX_PQM.Modelos;
@@ -14,6 +15,10 @@ public partial class Infraciones_Page : ContentPage
 {
     private ZebraPrinterService _printerService;
 	public string FolioAct; /**/
+
+	public static string macsel = "";
+    public static string file = "";
+
     public Infraciones_Page()
 	{   
 		InitializeComponent();
@@ -54,11 +59,21 @@ public partial class Infraciones_Page : ContentPage
 		
     }
 
-	private async void CargarData()
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        await Task.Delay(100);
+        imgGif.IsAnimationPlaying = false;
+        await Task.Delay(100);
+        imgGif.IsAnimationPlaying = true;
+    }
+
+    private async void CargarData()
 	{
 		try
 		{
-			ShowMessage.ShowLoading();
+			//ShowMessage.ShowLoading();
 			List < InspectorLogin > UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
 			List < clsInspector > inspectores = await App.DataBase.GetItemsTable<clsInspector>(); 
 			int PIN_CLAVE = UsuarioLogin.First().PIN_CLAVE; // UsuarioLogin.FirstOrDefault(x => x.User_act == true).PIN_CLAVE;         /* numero de inspector		*/
@@ -105,11 +120,11 @@ public partial class Infraciones_Page : ContentPage
 				DisplayAlert("¡¡CUIDADO!!" , $"NO EXISTE UNA IMPRESORA PRECARGADA. \nACTUALICE EL CATALOGO O SELECCIONE UNA", "OK");
 
             }
-            ShowMessage.HideLoading();
+            //ShowMessage.HideLoading();
         }
         catch (Exception EX)
 		{
-            ShowMessage.HideLoading();
+            //ShowMessage.HideLoading();
             ShowMessage.Alert("ERROR :" + EX.Message);
 		}
     }
@@ -133,7 +148,9 @@ public partial class Infraciones_Page : ContentPage
 
     private async void btnGuardar_Clicked(object sender, EventArgs e)
     {
-		int folioOld = 0
+        grdLoading.IsVisible = true;
+
+        int folioOld = 0
 			, folioUser = 0
 			, folioInsp = 0;
 			
@@ -184,7 +201,7 @@ public partial class Infraciones_Page : ContentPage
 		{
 			try
 			{
-				ShowMessage.ShowLoading();
+				//ShowMessage.ShowLoading_2();
 				#region cargamos data
 				UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
 				ListaMarcas = await App.DataBase.GetItemsTable<clsMarcas>();			
@@ -326,11 +343,11 @@ public partial class Infraciones_Page : ContentPage
                             }
                             
                         }
-                        ShowMessage.HideLoading();
+                        //ShowMessage.HideLoading_2();
 					}
 					catch (Exception er)
 					{
-						ShowMessage.HideLoading();
+						//ShowMessage.HideLoading_2();
 						MultaGuardadaSQLLite = false;
 						ActUltimoFoli = false;
 						ActListaFolios = false;
@@ -346,21 +363,21 @@ public partial class Infraciones_Page : ContentPage
 						 */
 						try
 						{
-							ShowMessage.ShowCheckInternet();
+							//ShowMessage.ShowCheckInternet();
 							checkInternet = await catalogos.ChackInternet();
-							ShowMessage.HideCheckInternet();
+							//ShowMessage.HideCheckInternet();
 							if (checkInternet)
 							{
-								ShowMessage.ShowCheckServer();
+								//ShowMessage.ShowCheckServer();
 								checkServer = await catalogos.ChackServer();
-								ShowMessage.HideCheckServer();
+								//ShowMessage.HideCheckServer();
 								if (checkServer)
 								{
 									/*sincornizando datos*/
-									ShowMessage.ShowSendData();
+									//ShowMessage.ShowSendData();
 									MultaInServer = await catalogos.GuardaCobro(multa);
 									ActfolioServer = await catalogos.ActFolInsp(UsuarioLogin.First().PIN_FOLIO, UsuarioLogin.First().PIN_CLAVE);
-									ShowMessage.HideSendData();
+									//ShowMessage.HideSendData();
 									if (!MultaInServer)
 									{ ShowMessage.Alert("Error al Enviar el Tiket");}
 								}
@@ -370,15 +387,15 @@ public partial class Infraciones_Page : ContentPage
 						}
 						catch (Exception er)
 						{
-							ShowMessage.HideSendData();
-							ShowMessage.HideCheckServer();
-							ShowMessage.HideCheckInternet();
+							//ShowMessage.HideSendData();
+							//ShowMessage.HideCheckServer();
+							//ShowMessage.HideCheckInternet();
 							ShowMessage.Alert("Error:" + er.Message.ToString());
 						}
 
 						/*Actualiza estatus de infracion si ya esta en el servidor*/
 						if (MultaInServer)
-						{	ShowMessage.ShowLoading();
+						{	//ShowMessage.ShowLoading_2();
 							try
 							{	/* PASO DEL DIABLO :v */
 								Lista_multas_para_actualizar = await App.DataBase.GetItemsTable<Infracciones>();
@@ -392,19 +409,21 @@ public partial class Infraciones_Page : ContentPage
 									await App.DataBase.CreateTables<Infracciones>();
 									await App.DataBase.InsertRangeItem<Infracciones>(Lista_multas_para_actualizar);
 								}
-								ShowMessage.HideLoading();
+								//ShowMessage.HideLoading_2();
 							}
 							catch (Exception ex)
 							{
-								ShowMessage.HideLoading();
+								//ShowMessage.HideLoading_2();
 								ShowMessage.Alert("Error: " + ex.Message);
 							}
 						}
 
 						/*Imprimir Tiket*/
-						ShowMessage.ShowLoading();
-						grdLoading.IsVisible = true;
+						//ShowMessage.ShowLoading_2();
 
+
+						
+						
                         try
 						{
 							List<BluetoothPrinter> impresoraGuardad = new List<BluetoothPrinter>();
@@ -458,16 +477,13 @@ public partial class Infraciones_Page : ContentPage
                                     await stream.CopyToAsync(fileStream);
                                 }
                                 fileName = Path.Combine(FileSystem.CacheDirectory, "screenshot.png");
-                                int wid = 380; //Convert.ToInt32(380);
-                                int hig = 1950;//Convert.ToInt32(1750);
-                                Connection connection = new BluetoothConnection(MacSelected);
-                                connection.Open();
-                                ZebraPrinter zebra = ZebraPrinterFactory.GetInstance(connection);
-                                int x = 0;
-                                int y = 50;
-                                zebra.PrintImage( Path.GetFullPath(fileName),x,y,wid,hig,false);
-                                zebra.PrintImage(Path.GetFullPath(fileName), x, y, wid, hig, false);
-                                connection.Close();
+                               
+
+								macsel = MacSelected;
+								file = fileName;
+
+                                Thread backgroundThread = new Thread(new ThreadStart(Print));
+								backgroundThread.Start();
 
                                 try /* GUARDAMOS NUEVA IMPRESORA */
                                 {
@@ -493,15 +509,17 @@ public partial class Infraciones_Page : ContentPage
                             }
                             webView.IsVisible = false;
                             ImagenTemp.IsVisible = false;
-                        }
+
+                        
+							}
 						catch (Exception ex)
 						{
-							ShowMessage.HideLoading();
+							//ShowMessage.HideLoading_2();
 							ShowMessage.Alert("Error: " + ex.Message);
 						}
-                        
-                        grdLoading.IsVisible = false;
-						ShowMessage.HideLoading();
+                    
+
+                        //ShowMessage.HideLoading_2();
                         /*Limpia parametros para nueva multa*/
                         try
 						{
@@ -522,21 +540,53 @@ public partial class Infraciones_Page : ContentPage
 				}
 				else
 				{
-					ShowMessage.HideLoading();
+					//ShowMessage.HideLoading_2();
 					ShowMessage.Alert("No existe la tabla de infraciones");
 				}
 			}
 			catch (Exception ex)
 			{
-				ShowMessage.HideLoading();
+				//ShowMessage.HideLoading_2();
 				ShowMessage.Alert("Error: " + ex.Message);
 			}
         }
         else { ShowMessage.Alert("Favor de Llenar Todos los Campos"); }
+
+		await Task.Delay(5000);
+        grdLoading.IsVisible = false;
     }
 
-	private async void ProsesActFolInpect()
+    static void Print()
+    {
+		try
+		{
+            Connection connection = new BluetoothConnection(macsel);
+            connection.Open();
+            ZebraPrinter zebra = ZebraPrinterFactory.GetInstance(connection);
+            int x = 0;
+            int y = 50;
+            int wid = 380; //Convert.ToInt32(380);
+            int hig = 1950;//Convert.ToInt32(1750);
+            zebra.PrintImage(Path.GetFullPath(file), x, y, wid, hig, false);
+            zebra.PrintImage(Path.GetFullPath(file), x, y, wid, hig, false);
+            connection.Close();
+
+            macsel = "";
+            file = "";
+        }
+		catch
+		{
+            ShowMessage.Alert("IMPRESORA NO CONECTADA \nINFRACCION GUARDADA EN EL DISPOSITIVO PARA REIMPRIMIR");
+        }
+    }
+
+    private async void ProsesActFolInpect()
 	{
 
 	}
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+		DisplayAlert("dd", "Hola", "ok", "ok");
+    }
 }

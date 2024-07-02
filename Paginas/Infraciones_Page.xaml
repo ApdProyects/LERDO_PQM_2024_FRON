@@ -17,6 +17,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- parte superior-->
@@ -217,110 +219,98 @@
             </StackLayout>
             <!--</ScrollView>-->
 
-            <StackLayout Grid.Row="2" Margin="0,30,0,0" VerticalOptions="Start" Orientation="Vertical">
-                
-                
-                <Grid>
+ 
+            <Grid Grid.Row="2" Margin="0,30,30,0" IsVisible="True">
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="10*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Border 
-                    Grid.Row="0"
-                    HorizontalOptions="Fill"                         
-                    BackgroundColor="{StaticResource APDConLema5}">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="5,5,5,5"></RoundRectangle>
-                        </Border.StrokeShape>
-                        <Grid ColumnDefinitions=".7*,.3*" Margin="5">
-                            <Label Grid.Column="0" HorizontalOptions="Start" VerticalTextAlignment="Center" 
-                                   FontFamily="Inter-Bold" FontSize="Subtitle"  Text=" DESCRIPCIÓN" TextColor="{StaticResource APDConLema1}" ></Label>
-                            <Label Grid.Column="1" HorizontalOptions="Center" VerticalTextAlignment="Center" 
-                                   FontFamily="Inter-Bold" FontSize="Subtitle"  Text="IMPORTE" TextColor="{StaticResource APDConLema1}"></Label>
-                        </Grid>
-                    </Border>
-                    <Grid Grid.Row="1" ColumnDefinitions=".7*,.3*" >
-                        <Label Grid.Column="0" 
-                       HorizontalOptions="Center" 
-                       VerticalTextAlignment="Center" 
-                       FontSize="12" 
-                       FontFamily="Inter-SemiBold"
-                       Text="Art. 31 REGLAMENTO DE ESTACIONÓMETROS EN LA VÍA PÚBLICA" 
-                       TextColor="{StaticResource APDConLema4}" Margin="7,0,30,0"></Label>
-                        <Label Grid.Column="1" x:Name="lbl1Monto" HorizontalOptions="Center" FontFamily="Inter-SemiBold" VerticalTextAlignment="Center"  
-                               Text="$0" TextColor="{StaticResource AzulAPD}"></Label>
-                    </Grid>
-                    <Border Grid.Row="2" VerticalOptions="Start" HeightRequest="3" BackgroundColor="Black" Margin="0,2,0,0"></Border>
-                    <Grid Grid.Row="2" ColumnDefinitions=".7*,.3*" Margin="0,10,0,0">
-                        <Label Grid.Column="0" HorizontalOptions="End" VerticalTextAlignment="Center" Text="TOTAL:"  FontFamily="Inter-Bold"
-                               TextColor="{StaticResource APDConLema4}" ></Label>
-                        <Label Grid.Column="1" x:Name="lbl2Monto" HorizontalOptions="Center" VerticalTextAlignment="Center"  FontFamily="Inter-Bold"
-                               Text="$0" TextColor="{StaticResource AzulAPD}"></Label>
-                    </Grid>
-
-
-                    <Button
-                        Grid.Row="3"
-                         Margin="0,40,0,20"
-                         x:Name="btnGuardar"
-                         Clicked="btnGuardar_Clicked"
-                         FontSize="16"
-                         Text="GUARDAR INFRACCIÓN"
-                             FontFamily="Inter-SemiBold"
-                             FontAttributes="Bold"
-                         ImageSource="icon_save.png"
-                         TextColor="{StaticResource White}"
-                         Background="{StaticResource APDConLema4}"
-                         BorderColor="{StaticResource APDConLema3}"
-                         BorderWidth="1"
-                         VerticalOptions="Center"></Button>
-
-                </Grid>
-                
-                
-               
-            </StackLayout>
-
-
-
-            <Grid Grid.Row="0" Grid.RowSpan="3" x:Name="grdLoading" BackgroundColor="{StaticResource White}" IsVisible="False">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="10*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="4.2*"/>
-                    <RowDefinition Height="1.6*"/>
-                    <RowDefinition Height="4.2*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackLayout x:Name="gridLoadingBox" Grid.Row="1" Grid.Column="1" BackgroundColor="#009D71">
-                    <ActivityIndicator 
-                    Color="White"
-                    IsRunning="True"
-                    Margin="0,14,0,0"/>
-                    <Label 
-                        x:Name="lblCarga"
-                        TextColor="{StaticResource White}"
-                        Text="Imprimiendo...."
-                        FontSize="20"
-                        HorizontalTextAlignment="Center"
-                        Margin="0,13,0,0"/>
-                </StackLayout>
+                <Border 
+                Grid.Row="0"
+                HorizontalOptions="Fill"                         
+                BackgroundColor="{StaticResource APDConLema5}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="5,5,5,5"></RoundRectangle>
+                    </Border.StrokeShape>
+                    <Grid ColumnDefinitions=".7*,.3*" Margin="5">
+                        <Label Grid.Column="0" HorizontalOptions="Start" VerticalTextAlignment="Center" 
+                                FontFamily="Inter-Bold" FontSize="Subtitle"  Text=" DESCRIPCIÓN" TextColor="{StaticResource APDConLema1}" ></Label>
+                        <Label Grid.Column="1" HorizontalOptions="Center" VerticalTextAlignment="Center" 
+                                FontFamily="Inter-Bold" FontSize="Subtitle"  Text="IMPORTE" TextColor="{StaticResource APDConLema1}"></Label>
+                    </Grid>
+                </Border>
+                    
+                <Grid Grid.Row="1" ColumnDefinitions=".7*,.3*" >
+                    <Label Grid.Column="0" 
+                    HorizontalOptions="Center" 
+                    VerticalTextAlignment="Center" 
+                    FontSize="12" 
+                    FontFamily="Inter-SemiBold"
+                    Text="Art. 31 REGLAMENTO DE ESTACIONÓMETROS EN LA VÍA PÚBLICA" 
+                    TextColor="{StaticResource APDConLema4}" Margin="7,0,30,0"></Label>
+                    <Label Grid.Column="1" x:Name="lbl1Monto" HorizontalOptions="Center" FontFamily="Inter-SemiBold" VerticalTextAlignment="Center"  
+                            Text="$0" TextColor="{StaticResource AzulAPD}"></Label>
+                </Grid>
+                    
+                <Border Grid.Row="2" VerticalOptions="Start" HeightRequest="3" BackgroundColor="Black" Margin="0,2,0,0"></Border>
+                    
+                <Grid Grid.Row="2" ColumnDefinitions=".7*,.3*" Margin="0,10,0,0">
+                    <Label Grid.Column="0" HorizontalOptions="End" VerticalTextAlignment="Center" Text="TOTAL:"  FontFamily="Inter-Bold"
+                            TextColor="{StaticResource APDConLema4}" ></Label>
+                    <Label Grid.Column="1" x:Name="lbl2Monto" HorizontalOptions="Center" VerticalTextAlignment="Center"  FontFamily="Inter-Bold"
+                            Text="$0" TextColor="{StaticResource AzulAPD}"></Label>
+                </Grid>
+
 
             </Grid>
 
-            <ScrollView Grid.Row="3" x:Name="ImagenTemp" IsVisible="True">
+            <Button
+                Margin="0,40,0,0"
+            Grid.Row="3"                
+             x:Name="btnGuardar"
+             Clicked="btnGuardar_Clicked"
+             FontSize="16"
+             Text="GUARDAR INFRACCIÓN"
+             FontFamily="Inter-SemiBold"
+             FontAttributes="Bold"
+             ImageSource="icon_save.png"
+             TextColor="{StaticResource White}"
+             Background="{StaticResource APDConLema4}"
+             BorderColor="{StaticResource APDConLema3}"
+             BorderWidth="1"
+             VerticalOptions="Center"></Button>
+
+            <Grid Grid.Row="0" Grid.RowSpan="5"  x:Name="grdLoading" BackgroundColor="{StaticResource White}" IsVisible="False" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*"/>
+                </Grid.RowDefinitions>
+
+ 
+                    <Image 
+                        Grid.Row="0" Grid.Column="0"
+                        x:Name="imgGif"
+                        Source="loading.gif"
+                        HeightRequest="250"
+                        WidthRequest="250"
+                        IsAnimationPlaying="True"
+                        VerticalOptions="Center"/>
+          
+
+            </Grid>
+
+            <ScrollView Grid.Row="4" x:Name="ImagenTemp" IsVisible="True">
                 <WebView Margin="-30,0,-30,0" x:Name="webView" VerticalOptions="FillAndExpand" IsVisible="False" />
             </ScrollView>
+            
         </Grid>
     </ScrollView>
 

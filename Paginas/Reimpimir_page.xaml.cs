@@ -19,9 +19,25 @@ public partial class Reimpimir_page : ContentPage
     public Reimpimir_page()
 	{
 		InitializeComponent();
-        CargaLista();
+
+        grdLoading.IsVisible = true;
+
+        //CargaLista();
         _printerService = new ZebraPrinterService();
+
+
+        Device.StartTimer(new TimeSpan(0, 0, 1), () =>
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await CargaLista();
+                grdLoading.IsVisible = false;
+            });
+            return false;
+        });
     }
+
+
     private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
     {
         try
@@ -72,9 +88,47 @@ public partial class Reimpimir_page : ContentPage
 
     }
 
-    private async void CargaLista()
+    private void CargaLista2()
     {
-        ShowMessage.ShowLoading();
+        //ShowMessage.ShowLoading();
+        
+        try
+        {
+            listaInfracciones = App.DataBase.GetItemsTable<Infracciones>().Result;
+        }
+        catch (Exception)
+        {
+            listaInfracciones = new List<Infracciones>();
+        }
+        searchResults.ItemsSource = listaInfracciones
+                                        .OrderByDescending(i => i.Fecha_hora_Infraccion)
+                                        .ToList();
+
+        try
+        {
+            List<ClsImpresoras> Listaimpresoras = App.DataBase.GetItemsTable<ClsImpresoras>().Result;
+            CBImpresoras.ItemsSource = Listaimpresoras.Select(x => x.PIM_NOMBRE_IMPRESORA).ToList();
+            List<BluetoothPrinter> ImpresoraGuardad = App.DataBase.GetItemsTable<BluetoothPrinter>().Result;
+            string MacAddres = ImpresoraGuardad.First().PIM_MACADDRESS;
+            int Index = Listaimpresoras.FindIndex(x => x.PIM_MACADDRESS == MacAddres);
+            if (Index >= 0)
+            {
+                CBImpresoras.SelectedIndex = Index;
+            }
+        }
+        catch (Exception)
+        {
+            DisplayAlert("¡¡CUIDADO!!", $"NO EXISTE UNA IMPRESORA PRECARGADA. \nACTUALIZE EL CATALOGO O SELECCIONE UNA", "OK");
+        }
+
+        
+        //ShowMessage.HideLoading();
+    }
+
+    private async Task CargaLista()
+    {
+        //ShowMessage.ShowLoading();
+        grdLoading.IsVisible = true;
         try
         {
             listaInfracciones = await App.DataBase.GetItemsTable<Infracciones>();
@@ -104,7 +158,18 @@ public partial class Reimpimir_page : ContentPage
             DisplayAlert("¡¡CUIDADO!!" , $"NO EXISTE UNA IMPRESORA PRECARGADA. \nACTUALIZE EL CATALOGO O SELECCIONE UNA", "OK");
         }
 
-        ShowMessage.HideLoading();
+        grdLoading.IsVisible = false;
+        //ShowMessage.HideLoading();
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        await Task.Delay(100);
+        imgGif.IsAnimationPlaying = false;
+        await Task.Delay(100);
+        imgGif.IsAnimationPlaying = true;
     }
 
     private async void searchResults_ItemSelected(object sender, SelectedItemChangedEventArgs e)

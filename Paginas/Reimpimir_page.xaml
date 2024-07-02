@@ -4,27 +4,37 @@
              x:Class="Lerdo_MX_PQM.Paginas.Reimpimir_page"
              Title="REIMPRIMIR">
     <Grid RowDefinitions="Auto, *, .1*">
-        <StackLayout Grid.Row="0">
-            <Label x:Name="lblImpresora"
-               Margin="10,0,0,0" FontSize="14"
-               Text="IMPRESORA:" 
-               TextColor="{StaticResource APDConLema5}"/>
-            <Picker Margin="0,10"
+        
+        <StackLayout Grid.Row="0" Margin="25,10,25,0">
+            <Label 
+                x:Name="lblImpresora"
+                FontSize="16"
+                Text="IMPRESORA:" 
+                FontFamily="Inter-Bold" 
+                FontAttributes="Bold"
+                Margin="4,0,0,0"
+                TextColor="{StaticResource APDConLema5}"/>
+            <Picker Margin="0,0"
                 x:Name="CBImpresoras"
                 FontSize="15" 
+                FontAttributes="Bold"
+                FontFamily="Inter-Regular"
                 Title="SELECCIONE UNA IMPRESORA"
                 TitleColor="LightSlateGray"
                 TextColor="{StaticResource lemaAPD}"></Picker>
         </StackLayout>
-        <Grid Grid.Row="1" RowDefinitions="Auto, *">
+        
+        <Grid Grid.Row="1" RowDefinitions="Auto, *" Margin="15,20,25,0">
             <SearchBar 
                 Grid.Row="0" 
                 TextChanged="SearchBar_TextChanged"
                 CancelButtonColor="Red"
                 CharacterSpacing="5"
                 CursorPosition="5"
-                FontFamily="OpenSansRegular"
-                Placeholder="INGRESE UN FOLIO O PLACA"
+                 FontSize="15" 
+                 FontAttributes="Bold"
+                 FontFamily="Inter-Regular"
+                Placeholder="FOLIO O PLACA"
                 PlaceholderColor="Gray"
                 SelectionLength="10"
                 TextColor="Gray"
@@ -57,16 +67,16 @@
                                     </StackLayout>
                                     <StackLayout Grid.Row="1" Grid.Column="1"  Orientation="Horizontal" HorizontalOptions="Center">
                                         <Label Text="ENVIADO: "></Label>
-                                            <Border BackgroundColor="RED"
+                                        <Border BackgroundColor="RED"
                                                     HeightRequest="20"
                                                     HorizontalOptions="Start"
                                                     VerticalOptions="Start"
                                                     WidthRequest="20">
-                                                <Border.StrokeShape>
-                                                    <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
-                                                </Border.StrokeShape>
-                                            </Border>
-                                            <Border
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
+                                            </Border.StrokeShape>
+                                        </Border>
+                                        <Border
                                                     Margin="-20,0,0,0"
                                                     BackgroundColor="Green"
                                                     HeightRequest="20"
@@ -74,54 +84,43 @@
                                                     VerticalOptions="Start"
                                                     WidthRequest="20"
                                                     IsVisible="{Binding Det_Sync}">
-                                                <Border.StrokeShape>
-                                                    <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
-                                                </Border.StrokeShape>
-                                            </Border>
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
+                                            </Border.StrokeShape>
+                                        </Border>
                                     </StackLayout>
                                 </Grid>
-                                <!--<StackLayout Margin="10,10,0,0" Orientation="Vertical">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="FOLIO: "></Label>
-                                        <Label Text="{Binding PIF_FOLIO}" FontAttributes="Bold"></Label>
-                                        <Label Margin="60,0,0,0" Text="PLACA: "></Label>
-                                        <Label Text="{Binding PIF_PLACAS}" FontAttributes="Bold"></Label>
-                                    </StackLayout>
-                                    <StackLayout Margin="0,10,0,0" Orientation="Horizontal">
-                                        <Label Text="FECHA: "></Label>
-                                        <Label Text="{Binding Fecha_hora_Infraccion, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontAttributes="Bold"></Label>
-                                        <Label Margin="60,0,0,0" Text="ENVIADO: "></Label>
-                                        <Border BackgroundColor="RED"
-                                                HeightRequest="20"
-                                                HorizontalOptions="Start"
-                                                VerticalOptions="Start"
-                                                WidthRequest="20">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
-                                            </Border.StrokeShape>
-                                        </Border>
-                                        <Border
-                                                Margin="-20,0,100,0"
-                                                BackgroundColor="Green"
-                                                HeightRequest="20"
-                                                HorizontalOptions="Start"
-                                                VerticalOptions="Start"
-                                                WidthRequest="20"
-                                                IsVisible="{Binding Det_Sync}">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="100,100,100,100"></RoundRectangle>
-                                            </Border.StrokeShape>
-                                        </Border>
-                                    </StackLayout>
-                                </StackLayout>-->
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
             </ScrollView>
         </Grid>
+
+        <Grid Grid.Row="0" Grid.RowSpan="2"  x:Name="grdLoading" BackgroundColor="{StaticResource White}" IsVisible="False" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
+
+
+            <Image 
+            Grid.Row="0" Grid.Column="0"
+            x:Name="imgGif"
+            Source="loading.gif"
+            HeightRequest="250"
+            WidthRequest="250"
+            IsAnimationPlaying="True"
+            VerticalOptions="Center"/>
+
+
+        </Grid>
+
         <ScrollView Grid.Row="2" x:Name="ImagenTemp" IsVisible="True">
             <WebView x:Name="webView" VerticalOptions="FillAndExpand" IsVisible="false"/>
         </ScrollView>
+        
     </Grid>
 </ContentPage>

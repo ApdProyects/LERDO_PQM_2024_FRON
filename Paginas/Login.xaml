@@ -6,19 +6,19 @@
              xmlns:input="clr-namespace:InputKit.Shared.Controls;assembly=InputKit.Maui"
              Title="Login">
     <Grid>
-        <Grid Grid.Row="0" Grid.Column="0" x:Name="grdLoading" BackgroundColor="{StaticResource APDConLema1}" IsVisible="True">
+        <Grid Grid.Row="0" Grid.Column="0" x:Name="grdLoading" BackgroundColor="{StaticResource White}" IsVisible="True">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="4.2*"/>
+                <RowDefinition Height="3.2*"/>
                 <RowDefinition Height="1.6*"/>
-                <RowDefinition Height="4.2*"/>
+                <RowDefinition Height="5.2*"/>
             </Grid.RowDefinitions>
 
-            <StackLayout x:Name="gridLoadingBox" Grid.Row="1" Grid.Column="1" BackgroundColor="{StaticResource lemaAPD}">
+            <!--<StackLayout x:Name="gridLoadingBox" Grid.Row="1" Grid.Column="1" BackgroundColor="{StaticResource lemaAPD}">
                 <ActivityIndicator 
                     Color="White"
                     IsRunning="True"
@@ -30,6 +30,15 @@
                                 FontSize="20"
                                 HorizontalTextAlignment="Center"
                                 Margin="0,13,0,0"/>
+            </StackLayout>-->
+
+            <StackLayout x:Name="gridLoadingBox" Grid.Row="1" Grid.Column="1" IsVisible="False">
+                <Image 
+                    x:Name="imgGif"
+                    Source="loading.gif"
+                    HeightRequest="250"
+                    WidthRequest="250"
+                    IsAnimationPlaying="True"/>
             </StackLayout>
 
         </Grid>
