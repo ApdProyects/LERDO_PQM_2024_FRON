@@ -17,12 +17,12 @@ using System.Net.Security;
 
 using Lerdo_MX_PQM.Modelos;
 using Lerdo_MX_PQM;
-
+  
 public class clsServices
 {
     private String _strNodos, _strRaiz;
     private string jsonNodos = "", jsonRaiz = "";
-
+   
     //private static string UrlAPI = "https://api.parquimetros.grupoapd.mx/api/";   /* servidor DE PRUEBAS ??*/
     private static string UrlAPI = App.Config.ToString();/* servidor DE PRUEBAS ??*/
 
