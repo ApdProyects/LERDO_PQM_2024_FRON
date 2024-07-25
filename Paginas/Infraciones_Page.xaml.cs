@@ -2,12 +2,14 @@ using Android.AccessibilityServices;
 using Android.InputMethodServices;
 using Android.Renderscripts;
 using Android.Text;
+using AndroidX.Emoji2.Text.FlatBuffer;
 using Lerdo_MX_PQM.Helpers;
 using Lerdo_MX_PQM.Modelos;
 using Microsoft.Maui.Platform;
 using System.Collections.Generic;
 using Zebra.Sdk.Comm;
 using Zebra.Sdk.Printer;
+using static AndroidX.ConstraintLayout.Widget.ConstraintSet.Constraint;
 
 namespace Lerdo_MX_PQM.Paginas;
 
@@ -168,7 +170,342 @@ public partial class Infraciones_Page : ContentPage
 		}
 	}
 
-	private async void btnGuardar_Clicked(object sender, EventArgs e)
+	private async void GuardarInfraccion()
+	{
+		/*BUSCAR INSPECTOR LOGUEADO*/
+		InspectorLogin Inspector = await BuscarInspector();
+		if (Inspector == null)
+			return;
+
+		/*VALIDAR CAMPOS VACIOS*/
+		bool validacion = await ValidarCamposVacios();
+		if (validacion == false)
+			return;
+
+		/*VALIDAR TABLA DE INFRACCIONES*/
+		await ValidarTablaInfraciones();
+
+        /*GUARDAR MULTA LOCAL*/
+        Infracciones Multa = await GuardarMultaLocal(Inspector);
+		if (Multa == null)
+			return;
+
+		/*AUMENTAR FOLIO DE INSPECTOR*/
+		bool aumentar = await ActualizarFolioInspector(Inspector);
+		if(aumentar == false)
+		{
+			await EliminarMulta(Multa);
+			return;
+        }
+
+		/*AUMENTAR CONSECUTIVO*/
+		bool aumentarcon = await ActualizarConsecutivo(Inspector);
+        if (aumentarcon == false)
+        {
+            await EliminarMulta(Multa);
+            return;
+        }
+
+		/*INSERTAR ULTIMAS INFRACCIONES*/
+		await ActualizaUltimas(Multa);
+
+		/*VALIDAR INTERNET Y SERVIDOR*/
+		string internet = await VerificaInternet();
+		if(internet == "")
+		{
+
+		}
+		else
+		{
+			await ShowMessage.Alert(internet);
+		}
+    } 
+
+	private async Task<InspectorLogin> BuscarInspector()
+	{
+		try
+		{
+            List<InspectorLogin> UsuarioLogin = await App.DataBase.GetItemsTable<InspectorLogin>();
+			if(UsuarioLogin!= null)
+			{
+				if(UsuarioLogin.Count > 0)
+				{
+					return UsuarioLogin[0];
+                }
+                else
+                {
+                    await ShowMessage.Alert($"Error al consultar el inspector \n Intente nuevamente.");
+                    return null;
+                }
+            }
+			else
+			{
+                await ShowMessage.Alert($"Error al consultar el inspector \n Intente nuevamente.");
+                return null;
+            }
+        }
+        catch (Exception ex)
+		{
+			await ShowMessage.Alert($"Error al consultar el inspector \n Intente nuevamente.");
+			return null;
+		}
+    }
+
+	private async Task<bool> ValidarCamposVacios()
+	{
+
+		if (CBCOLOR.SelectedIndex <= 1)
+		{
+			await ShowMessage.Alert("Selecciona el color");
+			return false;
+		}
+
+		if (CBEDOPLACA.SelectedIndex <= 1)
+		{
+			await ShowMessage.Alert("Selecciona el estado");
+            return false;
+        }
+
+		if (CBGARANTIA.SelectedIndex <= 1)
+		{
+			await ShowMessage.Alert("Selecciona la garantia");
+            return false;
+        }
+
+		if (CBLINEA.SelectedIndex <= 1)
+		{
+			await ShowMessage.Alert("Selecciona la linea");
+            return false;
+        }
+
+        if (CBLUGAR.SelectedIndex <= 1)
+        {
+            await ShowMessage.Alert("Selecciona el lugar");
+            return false;
+        }
+
+        if (CBMARCA.SelectedIndex <= 1)
+        {
+            await ShowMessage.Alert("Selecciona la marca");
+            return false;
+        }
+
+        if (CBMOTIVO.SelectedIndex <= 1)
+        {
+            await ShowMessage.Alert("Selecciona el motivo");
+            return false;
+        }
+
+        if (CBPROCEDENCIA.SelectedIndex <= 1)
+        {
+            await ShowMessage.Alert("Selecciona la procedencia");
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(txtNoPlaca.Text) ==true)
+        {
+            await ShowMessage.Alert("Ingresa la placa");
+            return false;
+        }
+
+        if (CBImpresoras.SelectedIndex <= 1)
+        {
+            await ShowMessage.Alert("Selecciona la impresora");
+            return false;
+        }
+
+		return true;
+    }
+
+	private async Task<bool> ValidarTablaInfraciones()
+	{
+        try
+        {
+            List<Infracciones> ListaMultas = await App.DataBase.GetItemsTable<Infracciones>();
+            if (ListaMultas.Count >= 0)
+            {
+				return true;
+            }
+			else
+			{
+                await App.DataBase.CreateTables<Infracciones>();
+                return true;
+			}
+        }
+        catch (Exception)
+        {
+            await App.DataBase.CreateTables<Infracciones>();
+            return true;
+        }
+    }
+
+	private async Task<Infracciones> GuardarMultaLocal(InspectorLogin UsuarioLogin)
+	{
+		try
+		{
+            int PIN_CLAVE = UsuarioLogin.PIN_CLAVE;
+            int PLI_CLAVE = ListaLugares.FirstOrDefault(x => x.PLI_NOMBRE.ToString() == CBLUGAR.SelectedItem.ToString()).PLI_CLAVE;
+            int PVM_CLAVE = ListaMarcas.FirstOrDefault(x => x.PVM_NOMBRE.ToString() == CBMARCA.SelectedItem.ToString()).PVM_CLAVE;
+            int PVL_CLAVE = ListaLineas.FirstOrDefault(x => x.PVL_NOMBRE.ToString() == CBLINEA.SelectedItem.ToString() && x.PVM_CLAVE == PVM_CLAVE).PVL_CLAVE;
+            int PVC_CLAVE = ListaColores.FirstOrDefault(x => x.PVC_NOMBRE.ToString() == CBCOLOR.SelectedItem.ToString()).PVC_CLAVE;
+            int PPE_CLAVE = ListaEstados.FirstOrDefault(x => x.PPE_NOMBRE.ToString() == CBEDOPLACA.SelectedItem.ToString()).PPE_CLAVE;
+            int PGR_CLAVE = ListaGarantias.FirstOrDefault(x => x.PGR_NOMBRE.ToString() == CBGARANTIA.SelectedItem.ToString()).PGR_CLAVE;
+
+
+            Infracciones multa = new Infracciones();
+            multa.PIF_FOLIO = txtFolio.Text.ToString();     /* folio completo para pagar*/
+            multa.Fecha_hora_Infraccion = DateTime.Now;     /*fecha de generacion de la multa*/
+            multa.PIN_CLAVE = PIN_CLAVE;                    /**/
+            multa.PPR_CLAVE = 1;                            /*solo manda un 1 de manera predeterminada. posible eliminacion*/
+            multa.PVM_CLAVE = PVM_CLAVE;                    /*MARCA*/
+            multa.PVL_CLAVE = PVL_CLAVE;                    /*LINEA DE VEICULO*/
+            multa.PVC_CLAVE = PVC_CLAVE;                    /*COLOR*/
+            multa.PIF_PLACAS = txtNoPlaca.Text.ToString();  /*PLACAS*/
+            multa.PPE_CLAVE = PPE_CLAVE;                    /*ESTADOS*/
+            multa.PLI_CLAVE = PLI_CLAVE;                    /*Lugares*/
+            multa.PIF_PROCEDENCIA = CBPROCEDENCIA.SelectedItem.ToString();
+            multa.PGR_CLAVE = PGR_CLAVE;                    /*GARANTIA*/
+            multa.PIF_IMPORTE = Montos.First().Monto.ToString();
+            multa.PIF_OBSERVACIONES = CBMOTIVO.SelectedItem.ToString(); /*posiblemente lo elimine*/
+            multa.PIF_MOTIVO_DESCRIPCION = CBMOTIVO.SelectedItem.ToString();
+            multa.Det_Sync = false;
+
+            int rows = await App.DataBase.InsertRangeItem<Infracciones>(new List<Infracciones> { multa });
+			if (rows > 0)
+				return multa;
+			else
+			{
+                await ShowMessage.Alert("Error al guardar la infracción en local");
+                return null;
+            }
+        }
+		catch(Exception ex)
+		{
+			await ShowMessage.Alert("Error al guardar la infracción en local");
+			return null;
+		}
+    }
+
+	private async Task<bool> ActualizarFolioInspector(InspectorLogin UsuarioLogin)
+	{
+		try
+		{
+			UsuarioLogin.PIN_FOLIO += 1;
+			if (await App.DataBase.DeleteTable<InspectorLogin>() > 1)
+			{
+				await App.DataBase.InsertRangeItem<InspectorLogin>(UsuarioLogin);
+				return true;
+			}
+			else
+			{
+                await ShowMessage.Alert("Error al actualizar folio de Inspector");
+                return false;
+            }
+		}
+		catch (Exception)
+		{
+			await ShowMessage.Alert("Error al actualizar folio de Inspector");
+			return false;
+		}
+    }
+
+    private async Task<bool> EliminarMulta(Infracciones Multa)
+	{
+		try
+		{
+			if(await App.DataBase.DeleteRow(Multa) > 0)
+			{
+				return true;
+			}
+			else
+			{
+                await ShowMessage.Alert($"Error al eliminar infracción \n Favor de comunicarse a APD Soporte");
+                return false;
+            }
+		}
+		catch (Exception)
+		{
+			await ShowMessage.Alert($"Error al eliminar infracción \n Favor de comunicarse a APD Soporte");
+			return false;
+		}
+	}
+
+	private async Task<bool> ActualizarConsecutivo(InspectorLogin UsuarioLogin)
+	{
+        try
+        {
+            List< clsInspector> ListaInspector = await App.DataBase.GetItemsTable<clsInspector>();
+            ListaInspector.Where(i => i.PIN_CLAVE == UsuarioLogin.PIN_CLAVE).First().PIN_FOLIO =+1;
+
+            if (await App.DataBase.DeleteTable<clsInspector>() > 0)
+            {
+                if(await App.DataBase.InsertRangeItem<clsInspector>(ListaInspector) > 0)
+				{
+					return true;
+				}
+                else
+                {
+                    await ShowMessage.Alert($"Error al actualizar consecutivo. \n Favor de comunicarse a APD Soporte");
+                    return false;
+                }
+            }
+            else
+            {
+                await ShowMessage.Alert($"Error al actualizar consecutivo. \n Favor de comunicarse a APD Soporte");
+                return false;
+            }            
+        }
+        catch (Exception ex)
+        {
+			await ShowMessage.Alert($"Error al actualizar consecutivo. \n Favor de comunicarse a APD Soporte");
+			return false;
+        }
+    }
+
+	private async Task<bool> ActualizaUltimas(Infracciones multa)
+	{
+        try
+        {
+            UltimasInfracciones ulimas = new UltimasInfracciones();
+            List<UltimasInfracciones> ListaUltimas = new List<UltimasInfracciones>();
+            ulimas.PIF_FOLIO = multa.PIF_FOLIO;
+            ulimas.PIF_PLACAS = multa.PIF_PLACAS;
+            ulimas.PIF_INFRACCION_FECHA = multa.Fecha_hora_Infraccion;
+            ListaUltimas.Add(ulimas);
+            await App.DataBase.InsertRangeItem<UltimasInfracciones>(ListaUltimas);
+			return true;
+        }
+        catch (Exception) 
+		{
+			return false;
+		}
+    }
+
+	private async Task<string> VerificaInternet()
+	{
+        clsCatalogos catalogos = new clsCatalogos();
+        bool checkInternet = await catalogos.ChackInternet();
+		//ShowMessage.HideCheckInternet();
+		if (checkInternet)
+		{
+			//ShowMessage.ShowCheckServer();
+			bool checkServer = await catalogos.ChackServer();
+			if (checkServer)
+				return "";
+			else
+			{
+                string msj = "Error al conectar al servidor";
+                return msj;
+            }
+		}
+		else
+		{
+            string msj = "No cuentas con acceso a internet";
+            return msj;
+		}
+	}
+
+private async void btnGuardar_Clicked(object sender, EventArgs e)
 	{
 		grdLoading.IsVisible = true;
 
@@ -296,7 +633,8 @@ public partial class Infraciones_Page : ContentPage
 						catch (Exception)
 						{
 							MultaGuardadaSQLLite = false;
-							DisplayAlert("!!ALERTA¡¡", $"FALLO AL GUARDAR LA MUTLA, EN EL TELEFONO INTENTE NUEVAMENTE", "OK");
+							DisplayAlert("!!ALERTA¡¡", $"FALLO AL GUARDAR LA MULTA, EN EL TELEFONO INTENTE NUEVAMENTE", "OK");
+							return;
 						}
 
 						if (MultaGuardadaSQLLite)
@@ -307,8 +645,8 @@ public partial class Infraciones_Page : ContentPage
 								/*	ACTUALIZAMOS EL FOLIO DE LOS Inspector_Logeado	*/
 								UsuarioLogin.First().PIN_FOLIO += 1;
 								folioUser = UsuarioLogin.First().PIN_FOLIO;
-								App.DataBase.DropTable<InspectorLogin>();
-								await App.DataBase.CreateTables<InspectorLogin>();
+								//App.DataBase.DropTable<InspectorLogin>();
+								await App.DataBase.DeleteTable<InspectorLogin>();
 								await App.DataBase.InsertRangeItem<InspectorLogin>(UsuarioLogin);
 								/*	ACTUALIZAMOS EL FOLIO DE LOS Inspector_Logeado	*/
 								ActFoliosUsuariosLogin = true;
@@ -618,6 +956,7 @@ public partial class Infraciones_Page : ContentPage
 
         grdLoading.IsVisible = false;
     }
+
 
     static void Print()
     {

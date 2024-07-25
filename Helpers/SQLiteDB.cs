@@ -41,9 +41,9 @@ namespace Lerdo_MX_PQM.SQLite
         {
             await Database.CreateTableAsync<TTable>();
         }
-        public async Task InsertRangeItem<T>(object Lista)
+        public async Task<int> InsertRangeItem<T>(object Lista)
         {
-            await Database.InsertAllAsync(Lista as List<T>);
+            return await Database.InsertAllAsync(Lista as List<T>);
         }
 
         public async Task InsertItem(object item)
@@ -59,6 +59,11 @@ namespace Lerdo_MX_PQM.SQLite
         public async Task<int> DeleteTable<Table>() where Table : class, new()
         {
             return await Database.DeleteAllAsync<Table>();
+        }
+
+        public async Task<int> DeleteRow(object obj)
+        {
+            return await Database.DeleteAsync(obj);
         }
 
         public async Task<List<Table>> GetItemsTable<Table>() where Table : class, new()
