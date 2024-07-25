@@ -13,12 +13,14 @@ namespace Lerdo_MX_PQM.SQLite
 
         private SQLiteAsyncConnection _connection;
 
-        private SQLiteAsyncConnection Database =>
-            (_connection ??= new SQLiteAsyncConnection(DbPath,
-                SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.SharedCache));
+        private SQLiteAsyncConnection Database { get { return _connection; } }
        
         public SQLiteDB()
         {
+            _connection ??= new SQLiteAsyncConnection(DbPath,
+                SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.SharedCache);
+
+
             /*inicializamos las tablas en SQLite*/
             CreateTables<clsInspector>();
             CreateTables<clsMarcas>();

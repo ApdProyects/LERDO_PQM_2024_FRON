@@ -172,25 +172,25 @@ public partial class Infraciones_Page : ContentPage
 
 	private async void GuardarInfraccion()
 	{
-		/*BUSCAR INSPECTOR LOGUEADO*/
+		/*1.- BUSCAR INSPECTOR LOGUEADO*/
 		InspectorLogin Inspector = await BuscarInspector();
 		if (Inspector == null)
 			return;
 
-		/*VALIDAR CAMPOS VACIOS*/
+		/*2.- VALIDAR CAMPOS VACIOS*/
 		bool validacion = await ValidarCamposVacios();
 		if (validacion == false)
 			return;
 
-		/*VALIDAR TABLA DE INFRACCIONES*/
+		/*3.- VALIDAR TABLA DE INFRACCIONES*/
 		await ValidarTablaInfraciones();
 
-        /*GUARDAR MULTA LOCAL*/
+        /*4.- GUARDAR MULTA LOCAL*/
         Infracciones Multa = await GuardarMultaLocal(Inspector);
 		if (Multa == null)
 			return;
 
-		/*AUMENTAR FOLIO DE INSPECTOR*/
+		/*5.- AUMENTAR FOLIO DE INSPECTOR*/
 		bool aumentar = await ActualizarFolioInspector(Inspector);
 		if(aumentar == false)
 		{
@@ -198,7 +198,7 @@ public partial class Infraciones_Page : ContentPage
 			return;
         }
 
-		/*AUMENTAR CONSECUTIVO*/
+		/*6.- AUMENTAR CONSECUTIVO*/
 		bool aumentarcon = await ActualizarConsecutivo(Inspector);
         if (aumentarcon == false)
         {
@@ -206,19 +206,43 @@ public partial class Infraciones_Page : ContentPage
             return;
         }
 
-		/*INSERTAR ULTIMAS INFRACCIONES*/
+		/*7.- INSERTAR ULTIMAS INFRACCIONES*/
 		await ActualizaUltimas(Multa);
 
-		/*VALIDAR INTERNET Y SERVIDOR*/
+
+
+		/*9.- MENSAJE DE GUARDADO DE FORMA LOCAL*/
+		await ShowMessage.Alert("Infracción guardada en el teléfono");
+
+
+
+		/*10.- VALIDAR INTERNET Y SERVIDOR*/
 		string internet = await VerificaInternet();
 		if(internet == "")
 		{
-
-		}
+			/*11.- ENVIAR MULTA A SERVIDOR BD*/
+			string valserver = await GuardarMultaServidor(Multa);
+			if(valserver == "")
+			{
+				/*12.- ACTUALIZAR ESTATUS SYNC*/
+				await ActualizaEstatusSync(Multa);                
+            }
+			else
+			{
+                await ShowMessage.Alert(valserver);
+            }
+        }
 		else
 		{
 			await ShowMessage.Alert(internet);
 		}
+
+
+
+
+		/*13.- IMPRIMIR TICKET*/
+
+
     } 
 
 	private async Task<InspectorLogin> BuscarInspector()
@@ -483,27 +507,181 @@ public partial class Infraciones_Page : ContentPage
 
 	private async Task<string> VerificaInternet()
 	{
-        clsCatalogos catalogos = new clsCatalogos();
-        bool checkInternet = await catalogos.ChackInternet();
-		//ShowMessage.HideCheckInternet();
-		if (checkInternet)
+		try
 		{
-			//ShowMessage.ShowCheckServer();
-			bool checkServer = await catalogos.ChackServer();
-			if (checkServer)
-				return "";
+			clsCatalogos catalogos = new clsCatalogos();
+			bool checkInternet = await catalogos.ChackInternet();
+			//ShowMessage.HideCheckInternet();
+			if (checkInternet)
+			{
+				//ShowMessage.ShowCheckServer();
+				bool checkServer = await catalogos.ChackServer();
+				if (checkServer)
+					return "";
+				else
+				{
+					string msj = "Error al conectar al servidor";
+					return msj;
+				}
+			}
 			else
 			{
-                string msj = "Error al conectar al servidor";
-                return msj;
-            }
+				string msj = "No cuentas con acceso a internet";
+				return msj;
+			}
 		}
-		else
+		catch (Exception ex)
 		{
             string msj = "No cuentas con acceso a internet";
             return msj;
-		}
+        }
 	}
+
+	private async Task<string> GuardarMultaServidor(Infracciones multa)
+	{
+		try
+		{
+			clsCatalogos catalogos = new clsCatalogos();
+			if (await catalogos.GuardaCobro(multa) == true)
+				return "";
+			else
+				return "Error al sincronizar infracción al servidor";
+		}
+		catch (Exception ex)
+		{
+            return "Error al sincronizar infracción al servidor";
+        }
+    }
+
+	private async Task<string> ActualizaEstatusSync(Infracciones multa)
+	{
+        string msj = "";
+        try
+		{
+			List<Infracciones> Lista_multas_para_actualizar = await App.DataBase.GetItemsTable<Infracciones>();
+			Lista_multas_para_actualizar.Where(i => i.PIF_FOLIO == multa.PIF_FOLIO).First().Det_Sync = true;
+			
+			if (await App.DataBase.DeleteTable<Infracciones>() > 0)
+			{
+				if (await App.DataBase.InsertRangeItem<Infracciones>(Lista_multas_para_actualizar) > 0)
+				{
+					msj = "";
+				}
+				else
+					msj = "Error al actualizar estatus SYNC";
+			}
+			else
+				msj = "Error al actualizar estatus SYNC";
+		}
+		catch (Exception ex)
+		{
+            msj = "Error al actualizar estatus SYNC";
+        }
+
+		return msj;
+    }
+
+	private async Task<bool> ImprimirTicket(Infracciones multa)
+	{
+        try
+        {
+            List<BluetoothPrinter> impresoraGuardad = new List<BluetoothPrinter>();
+            string Macaddres = "";
+            try
+            {
+                impresoraGuardad = await App.DataBase.GetItemsTable<BluetoothPrinter>();
+                Macaddres = impresoraGuardad.First().PIM_MACADDRESS.ToString();
+            }
+            catch (Exception) 
+			{ 
+			}
+
+            List<ClsImpresoras> ListaImpresoras = await App.DataBase.GetItemsTable<ClsImpresoras>(); // lista de impresoras de la base de datos
+            string MacSelected = ListaImpresoras.FirstOrDefault(x => x.PIM_NOMBRE_IMPRESORA == CBImpresoras.SelectedItem.ToString()).PIM_MACADDRESS.ToString();
+
+            List<ClsEstructuratiket> estructuratikets = await App.DataBase.GetItemsTable<ClsEstructuratiket>();
+
+            string tiket = estructuratikets.First().tiket.ToString();
+            var fileName = "";
+
+            string codebarras = _printerService.GenerateBarcodeBase64(multa.PIF_FOLIO.ToString());/*retorna base 64 para Codigo de barras*/
+            /*estructura del tiket*/
+            tiket = tiket.Replace("[logo_Base64]", LogoPNG.logoBase64.ToString());
+            tiket = tiket.Replace("[Fecha]", multa.Fecha_hora_Infraccion.ToString("dd/MM/yyyy"));
+            tiket = tiket.Replace("[Hora]", multa.Fecha_hora_Infraccion.ToString("t"));
+            tiket = tiket.Replace("[FOLIO]", multa.PIF_FOLIO);
+            tiket = tiket.Replace("[PROPIETARIO]", "A QUIEN CORRESPONDA");
+            tiket = tiket.Replace("[INSPECTOR]", txtInspector.Text);
+            tiket = tiket.Replace("[MARCA]", CBMARCA.SelectedItem.ToString());
+            tiket = tiket.Replace("[LINEA]", CBLINEA.SelectedItem.ToString());
+            tiket = tiket.Replace("[COLOR]", CBCOLOR.SelectedItem.ToString());
+            tiket = tiket.Replace("[PROCEDENCIA]", CBPROCEDENCIA.SelectedItem.ToString());
+            tiket = tiket.Replace("[LUGAR]", CBLUGAR.SelectedItem.ToString());
+            tiket = tiket.Replace("[GARANTIA]", CBGARANTIA.SelectedItem.ToString());
+            tiket = tiket.Replace("[ESTADO]", CBEDOPLACA.SelectedItem.ToString());
+            tiket = tiket.Replace("[Num_PLACA]", txtNoPlaca.Text.ToString());
+            tiket = tiket.Replace("[MOTIVO]", CBMOTIVO.SelectedItem.ToString());
+            tiket = tiket.Replace("[IMPORTE]", multa.PIF_IMPORTE.ToString());
+            tiket = tiket.Replace("[IMPORTE_EN_LETRA]", Montos.First().Monto_En_Letra.ToString());
+            tiket = tiket.Replace("[CODIGOBARRAS]", codebarras);
+
+            //bool print = await _printerService.PrintAsync_new(Macaddres, tiket);
+            webView.IsVisible = true;
+            ImagenTemp.IsVisible = true;
+
+            try /*impimimos el tiket*/
+            {
+                webView.Source = new HtmlWebViewSource { Html = tiket };
+                await Task.Delay(2000);
+                var stream = await webView.CaptureAsync();
+                using (var fileStream = new FileStream(Path.Combine(FileSystem.CacheDirectory, "screenshot.png"), FileMode.Create))
+                {
+                    await stream.CopyToAsync(fileStream);
+                }
+                fileName = Path.Combine(FileSystem.CacheDirectory, "screenshot.png");
+
+
+                macsel = MacSelected;
+                file = fileName;
+
+                Thread backgroundThread = new Thread(new ThreadStart(Print));
+                backgroundThread.Start();
+
+                try /* GUARDAMOS NUEVA IMPRESORA */
+                {
+                    if (Macaddres.Trim().ToString() != MacSelected.Trim().ToString())
+                    {
+                        List<BluetoothPrinter> lista = new List<BluetoothPrinter>();
+                        BluetoothPrinter newPrint = new BluetoothPrinter();
+                        newPrint.PIM_MACADDRESS = MacSelected;
+                        lista.Add(newPrint);
+                        App.DataBase.DropTable<BluetoothPrinter>();
+                        await App.DataBase.CreateTables<BluetoothPrinter>();
+                        await App.DataBase.InsertRangeItem<BluetoothPrinter>(lista);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    DisplayAlert("!!ALERTA¡¡", $"FALLO AL GUARDAR LA NUEVA IMPRESORA", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                DisplayAlert("!!ALERTA¡¡", $"IMPRESORA NO CONECTADA \nINFRACCION GUARDADA EN EL DISPOSITIVO PARA REIMPRIMIR", "OK");
+            }
+            webView.IsVisible = false;
+            ImagenTemp.IsVisible = false;
+
+
+        }
+        catch (Exception ex)
+        {
+            //ShowMessage.HideLoading_2();
+            ShowMessage.Alert("Error: " + ex.Message);
+        }
+
+		return true;
+    }
 
 private async void btnGuardar_Clicked(object sender, EventArgs e)
 	{

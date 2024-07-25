@@ -369,7 +369,7 @@ namespace Lerdo_MX_PQM.Modelos
             try
             {
                 clsServices service = new clsServices();
-                string endpont =  "Inspectores/GuardaCobro?"+
+                string endpont = "Inspectores/GuardaCobro_SP?" +
                           "PIF_FECALTA=" +multa.Fecha_hora_Infraccion.ToString("yyyy-MM-dd HH:mm:ss.fff") +
                           "&PIF_FOLIO=" +multa.PIF_FOLIO.ToString() +
                           "&PIF_INFRACCION_FECHA=" +multa.Fecha_hora_Infraccion.ToString("yyyy-MM-dd HH:mm:ss.fff") +
